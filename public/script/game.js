@@ -2,10 +2,10 @@
         Variables
 */
 const Player = {
-    x: 3*CELL_SIZE,
-    y: 8*CELL_SIZE,
-    width: 128, // 13
-    height: 64, // 16
+    x: 3*CELL_SIZE, //3
+    y: 9*CELL_SIZE,
+    width: 13, // 128
+    height: 16, // 64
     xVel: 0,
     yVel: 0,
     jumped: false,
@@ -39,7 +39,7 @@ function render()
     Player.animator.animState = Player.jumped ? "jump" : Player.animator.animState;
     Player.animator.animMirror = Math.abs(Player.xVel) > 0.1 ? Player.xVel < 0 : Player.animator.animMirror;
 
-    Player.animator.animState = "tank";
+    //Player.animator.animState = "tank";
 
     autoscroll(Player.x + (Player.width / 2), CELL_WIDTH / 3);
     drawWorld(WORLD_DATA, Player.world);

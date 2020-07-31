@@ -113,6 +113,7 @@ function drawWorld(world, worldTitle)
             drawBlock(block, block.x, block.y);
         else
             drawBlocks(block);
+        block.frame(block);
     });
 }
 
@@ -147,7 +148,7 @@ class Animator
         this.animMirror = false;
         this.animState = "default";
         this.animFrame = 0;
-        this.animSpeed = 300;
+        this.animSpeed = 150;
 
         for (var option in options)
         {
