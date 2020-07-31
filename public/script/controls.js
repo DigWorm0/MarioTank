@@ -3,6 +3,9 @@
 */
 var Controls = {};
 
+var selectedBlock = null;
+var selectedIndex = -1;
+
 /*
         Updates
 */
@@ -59,4 +62,122 @@ function beginControls()
             }
         }
     });
+    var xScale = document.getElementById("canvas").width/document.body.clientWidth;
+    var yScale = document.getElementById("canvas").height/document.body.clientHeight;
+
+    document.getElementById("canvas").addEventListener("click", function(event) {
+        for (var i = 0; i < WORLD_DATA[Player.world].length; i++) {
+            const block = WORLD_DATA[Player.world][i];
+            var collides = checkCollisions(event.x*xScale + cameraX, event.y*yScale + cameraY, 0, 0, block.x * CELL_SIZE - CELL_SIZE, block.y * CELL_SIZE - CELL_SIZE, block.width * CELL_SIZE, block.height * CELL_SIZE)
+            if (collides)
+            {
+                updateEditor(block, i);
+            }
+        }
+    });
 }
+
+/*
+        World Edit
+*/
+
+function editBlock()
+{
+    if(selectedBlock != null)
+    {
+        selectedBlock.type = document.getElementById("blockType").value;
+        selectedBlock.x = parseInt(document.getElementById("blockX").value);
+        selectedBlock.y = parseInt(document.getElementById("blockY").value);
+        selectedBlock.width = parseInt(document.getElementById("blockW").value);
+        selectedBlock.height = parseInt(document.getElementById("blockH").value);
+        selectedBlock.noRepeat = document.getElementById("blockRepeat").checked;
+        selectedBlock.solid = document.getElementById("blockSolid").checked;
+
+        selectedBlock.sprite = loadSprite("/sprites/" + selectedBlock.type + ".png")
+
+        document.getElementById("blockImg").src = "/sprites/" + selectedBlock.type + ".png";
+    }
+}
+
+function updateEditor(block, index)
+{
+    document.getElementById("blockType").value = block.type;
+    document.getElementById("blockX").value = block.x;
+    document.getElementById("blockY").value = block.y;
+    document.getElementById("blockH").value = block.height;
+    document.getElementById("blockW").value = block.width;
+    document.getElementById("blockRepeat").checked = block.noRepeat;
+    document.getElementById("blockSolid").checked = block.solid;
+
+    document.getElementById("blockImg").src = "/sprites/" + block.type + ".png"
+    if (block.width == 1 && block.height == 1) {
+        document.getElementById("blockImg").height = ((block.height / block.width) * 300.0);
+    }
+    else
+    {
+        document.getElementById("blockImg").height = 300;
+    }
+    selectedBlock = block;
+    selectedIndex = index;
+}
+
+function newBlock()
+{
+    WORLD_DATA[Player.world].push(new WorldObject(
+        "block/question_1",
+        Math.round(Player.x / 16),
+        Math.round(Player.y / 16),
+        {}
+    ));
+    updateEditor(WORLD_DATA[Player.world][WORLD_DATA[Player.world].length - 1], WORLD_DATA[Player.world].length - 1);
+}
+
+function delBlock()
+{
+    if (selectedBlock != null)
+    {
+        WORLD_DATA[Player.world].splice(selectedIndex, 1);
+        selectedBlock = null;
+        selectedIndex = -1;
+    }
+}
+
+function downloadMap()
+{
+    var json = [];
+    for (var i = 0; i < WORLD_DATA[Player.world].length; i++)
+    {
+        const block = WORLD_DATA[Player.world][i];
+
+        var prop = {};
+        if (block.height != 1)
+            prop.height = block.height;
+        if (block.width != 1)
+            prop.width = block.width;
+        if (block.noRepeat != false)
+            prop.noRepeat = block.noRepeat;
+        if (block.solid != true)
+            prop.solid = block.solid;
+        
+        json.push({
+            type: block.type,
+            x: block.x,
+            y: block.y,
+            properties: prop
+        });
+    }
+    download(Player.world + ".json", JSON.stringify(json));
+}
+
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
+  }

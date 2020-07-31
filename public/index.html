@@ -4,8 +4,23 @@
         <meta charset="UTF-8">
         <title>Marios Got a Tank</title>
         <link rel="stylesheet" type="text/css" href="/style/style.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body onload="beginGame()">
+        <div class="world-edit">
+            <h2>Editor</h2>
+            <b>Type:</b><input id="blockType" type="text" placeholder="type" onchange="editBlock()"/><br />
+            <b>X:</b><input id="blockX" type="number" placeholder="X" onchange="editBlock()"/><br />
+            <b>Y:</b><input id="blockY" type="number" placeholder="Y" onchange="editBlock()"/><br />
+            <b>Height:</b><input id="blockH" type="number" placeholder="Height" onchange="editBlock()"/><br />
+            <b>Width:</b><input id="blockW" type="number" placeholder="Width" onchange="editBlock()"/><br />
+            <b>No Repeat:</b><input id="blockRepeat" type="checkbox" onchange="editBlock()"/><br />
+            <b>Solid:</b><input id="blockSolid" type="checkbox" onchange="editBlock()"/><br />
+            <button type="button" onclick="newBlock()">New Block</button>
+            <button type="button" onclick="delBlock()">Delete Block</button>
+            <button type="button" onclick="downloadMap()">Download</button><br />
+            <img src="/" width="300" height="200" id="blockImg" />
+        </div>
         <canvas id="canvas" width="448" height="240"></canvas>
 
         <script src="/script/settings.js"></script>

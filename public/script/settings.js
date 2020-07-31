@@ -12,7 +12,7 @@ const CELL_WIDTH = 28;
 // Physics
 const PLAYER_SPEED = .2;
 const X_MOTION_DAMPING = .9;
-const Y_MOTION_DAMPING = .999;
+const Y_MOTION_DAMPING = .9;
 const GRAVITY = .2;
 const JUMP_FORCE = 6;
 

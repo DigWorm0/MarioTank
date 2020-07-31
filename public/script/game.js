@@ -2,10 +2,10 @@
         Variables
 */
 const Player = {
-    x: 3*CELL_SIZE, //3
-    y: 9*CELL_SIZE,
-    width: 13, // 128
-    height: 16, // 64
+    x: 8*CELL_SIZE,
+    y: 3*CELL_SIZE,
+    width: 13,
+    height: 16,
     xVel: 0,
     yVel: 0,
     jumped: false,
@@ -23,12 +23,8 @@ const Player = {
 */
 function update()
 {
-    if (Controls.up && !Player.jumped)
-    {
-        Player.yVel -= JUMP_FORCE
-        Player.jumped = true;
-    }
     Player.xVel += Controls.horizontal * PLAYER_SPEED;
+    Player.yVel += Controls.vertical * PLAYER_SPEED;
 
     addMotion(Player);
 }
@@ -39,16 +35,13 @@ function render()
     Player.animator.animState = Player.jumped ? "jump" : Player.animator.animState;
     Player.animator.animMirror = Math.abs(Player.xVel) > 0.1 ? Player.xVel < 0 : Player.animator.animMirror;
 
-    //Player.animator.animState = "tank";
-
     autoscroll(Player.x + (Player.width / 2), CELL_WIDTH / 3);
     drawWorld(WORLD_DATA, Player.world);
     drawSpriteBySize(Player.animator.getSprite(), Player.x, Player.y, Player.width, Player.height);
-    
-    //drawText(Math.round(fps), cameraX + 10, cameraY + 20, 20, fps >= 60 ? "red" : "black");
-    //drawLine(Player.x + 8, WORLD_DATA[DEFAULT_WORLD][5].y*16 - 8, WORLD_DATA[DEFAULT_WORLD][5].x*16 - 8, WORLD_DATA[DEFAULT_WORLD][5].y*16 - 8, "red")
-    //drawLine(Player.x + 8, WORLD_DATA[DEFAULT_WORLD][5].y*16 - 8,Player.x + 8,Player.y + 8, "red")
-
+    if (selectedBlock != null)
+    {
+        drawRectOutline(selectedBlock.x*16-16, selectedBlock.y*16-16, selectedBlock.width*16, selectedBlock.height*16, "red")
+    }
 }
 
 /*

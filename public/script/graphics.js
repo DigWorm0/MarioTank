@@ -3,7 +3,7 @@
 */
 // Canvas
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d")
+const ctx = canvas.getContext("2d");
 
 // Timing
 var last = getTimestamp(); // Time since Last Frame
@@ -56,6 +56,13 @@ function drawRect(x, y, width, height, color)
     ctx.fillStyle = color;
     ctx.fillRect(x - cameraX, y - cameraY, width, height)
 }
+function drawRectOutline(x, y, width, height, color)
+{
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.rect(x - cameraX, y - cameraY, width, height);
+    ctx.stroke();
+}
 function drawLine(x1, y1, x2, y2, color)
 {
     ctx.strokeStyle = color;
@@ -74,12 +81,26 @@ function drawText(text, x, y, size, color)
 
 function drawSprite(sprite, x, y)
 {
-    ctx.drawImage(sprite, x - cameraX, y - cameraY)
+    try
+    {
+        ctx.drawImage(sprite, x - cameraX, y - cameraY)
+    }
+    catch (e)
+    {
+        
+    }
 }
 
 function drawSpriteBySize(sprite, x, y, width, height)
 {
-    ctx.drawImage(sprite, x - cameraX, y - cameraY, width, height)
+    try
+    {
+        ctx.drawImage(sprite, x - cameraX, y - cameraY, width, height)
+    }
+    catch (e)
+    {
+
+    }
 }
 
 function clearDraw()

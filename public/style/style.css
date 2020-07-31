@@ -20,3 +20,33 @@ canvas {
     image-rendering: pixelated;
     -ms-interpolation-mode: nearest-neighbor;
 }
+
+input {
+    float:right;
+}
+
+img {
+    position: absolute;
+    bottom:0;
+}
+
+.world-edit {
+    background-color: white;
+    position: absolute;
+    width:300px;
+    height:600px;
+    top:20px;
+    left:20px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    padding:10px;
+    border-color:black;
+    border-width: 2px;
+    border-style:solid;
+    border-radius: 2px;
+    image-rendering:optimizeSpeed;
+    opacity: 0.8;
+}
+
+.world-edit:hover {
+    opacity: 1;
+}

@@ -416,6 +416,7 @@ var WORLD_DATA = {
 
 function goombaAI(entity, world)
 {
+    return;
     if (!("direction" in entity))
     {
         entity.direction = true;
