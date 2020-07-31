@@ -1,0 +1,22 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    margin:0;
+    background-color: black;
+}
+
+canvas {
+    height: 100%;
+    overflow: hidden;
+    height: 100%;
+    width:100%;
+
+    /* Retro (Pixelated) Look */
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -o-crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
