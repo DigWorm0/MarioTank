@@ -3,14 +3,14 @@
 */
 const Player = {
     x: 3*CELL_SIZE,
-    y: 5*CELL_SIZE,
+    y: 8*CELL_SIZE,
     width: 128, // 13
     height: 64, // 16
     xVel: 0,
     yVel: 0,
     jumped: false,
-    animator: new Animator(loadEntitySprites("player", {
-        "still": 1,
+    animator: new Animator(loadAnimSprites("entity/player", {
+        "default": 1,
         "jump": 1,
         "walk": 3,
         "tank": 1
@@ -35,7 +35,7 @@ function update()
 function render()
 {
     // Animations
-    Player.animator.animState = (Math.abs(Player.xVel) > 0.2) ? "walk" : "still";
+    Player.animator.animState = (Math.abs(Player.xVel) > 0.2) ? "walk" : "default";
     Player.animator.animState = Player.jumped ? "jump" : Player.animator.animState;
     Player.animator.animMirror = Math.abs(Player.xVel) > 0.1 ? Player.xVel < 0 : Player.animator.animMirror;
 

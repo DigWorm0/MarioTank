@@ -92,7 +92,7 @@ function clearDraw()
 */
 function drawBlock(block, x, y)
 {
-    drawSprite(block.sprite, (x*CELL_SIZE) - CELL_SIZE, (y*CELL_SIZE) - CELL_SIZE, CELL_SIZE,CELL_SIZE)
+    drawSprite(block.getSprite(), (x*CELL_SIZE) - CELL_SIZE, (y*CELL_SIZE) - CELL_SIZE, CELL_SIZE,CELL_SIZE)
 }
 
 function drawBlocks(block)
@@ -145,9 +145,9 @@ class Animator
     {
         this.sprites = sprites;
         this.animMirror = false;
-        this.animState = "still";
+        this.animState = "default";
         this.animFrame = 0;
-        this.animSpeed = 1000;
+        this.animSpeed = 300;
 
         for (var option in options)
         {
@@ -156,19 +156,18 @@ class Animator
 
         this.animInterval = setInterval(() => {
             this.animFrame++;
-            if (this.animFrame >= sprites[this.animState].length)
+            var realAnimState = this.animMirror ? this.animState + "_flip" : this.animState;
+            if (this.animFrame >= this.sprites[realAnimState].length)
                 this.animFrame = 0;
         }, this.animSpeed);
     }
 
     getSprite()
     {
-        var spriteList = this.animMirror ? this.sprites[this.animState + "_flip"] : this.sprites[this.animState];
-        if (this.animFrame >= spriteList.length)
-        {
+        var realAnimState = this.animMirror ? this.animState + "_flip" : this.animState;
+        if (this.animFrame >= this.sprites[realAnimState].length)
             this.animFrame = 0;
-        }
-        return spriteList[this.animFrame];
+        return this.sprites[realAnimState][this.animFrame];
     }
 }
 

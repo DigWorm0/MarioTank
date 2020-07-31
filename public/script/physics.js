@@ -44,8 +44,8 @@ function verifyMovement(entity)
             {
                 if (block.breakable)
                 {
-                    entity.xVel=0;
-                    WORLD_DATA[entity.world].splice(i, 1);
+                    //entity.xVel=0;
+                    //WORLD_DATA[entity.world].splice(i, 1);
                 }
                 return false;
             }

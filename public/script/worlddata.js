@@ -8,7 +8,14 @@ class WorldObject
         this.type = type;
         this.x = x;
         this.y = y;
-        this.sprite = loadSprite("/sprites/" + type + ".png")
+        if ("animation" in options)
+        {
+            this.animator = new Animator(loadAnimSprites(type, options["animation"]), {})
+        }
+        else
+        {
+            this.sprite = loadSprite("/sprites/" + type + ".png")
+        }
 
         // Defaults
         this.width = 1;
@@ -21,6 +28,16 @@ class WorldObject
         for (var option in options)
         {
             this[option] = options[option];
+        }
+    }
+
+    getSprite()
+    {
+        if ("sprite" in this)
+        {
+            return this.sprite;
+        } else if ("animator" in this) {
+            return this.animator.getSprite();
         }
     }
 }
@@ -100,6 +117,11 @@ var WORLD_DATA = {
         }),
         new WorldObject("block/bush_3", 60, 13, {
             "solid":false
+        }),
+        new WorldObject("entity/goomba", 7, 7, {
+            "animation": {
+                "default":2
+            }
         })
     ]
 }
@@ -114,7 +136,7 @@ function loadSprite(url)
     sprite.src = url;
     return sprite;
 }
-function loadEntitySprites(title, spriteCounts)
+function loadAnimSprites(type, spriteCounts)
 {
     var sprites = {};
     for (var sprite in spriteCounts)
@@ -123,10 +145,9 @@ function loadEntitySprites(title, spriteCounts)
         sprites[sprite + "_flip"] = [];
         for (var i = 0; i < spriteCounts[sprite]; i++)
         {
-            sprites[sprite].push(loadSprite("/sprites/entity/" + title + "/" + sprite + (i + 1) + ".png"));
-            sprites[sprite + "_flip"].push(loadSprite("/sprites/entity/" + title + "/" + sprite + (i + 1) + "_flip.png"));
+            sprites[sprite].push(loadSprite("/sprites/" + type + "/" + sprite + (i + 1) + ".png"));
+            sprites[sprite + "_flip"].push(loadSprite("/sprites/" + type + "/" + sprite + (i + 1) + "_flip.png"));
         }
-        
     }
     return sprites;
 }
