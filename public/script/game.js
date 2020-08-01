@@ -1,22 +1,7 @@
 /*
         Variables
 */
-const Player = {
-    x: 8*CELL_SIZE,
-    y: 3*CELL_SIZE,
-    width: 13,
-    height: 16,
-    xVel: 0,
-    yVel: 0,
-    jumped: false,
-    animator: new Animator(loadAnimSprites("entity/player", {
-        "default": 1,
-        "jump": 1,
-        "walk": 3,
-        "tank": 1
-    }), {}),
-    world: DEFAULT_WORLD
-}
+var Player = {};
 
 /*
         Loops
@@ -27,27 +12,41 @@ function update()
     Player.yVel += Controls.vertical * PLAYER_SPEED;
 
     addMotion(Player);
+    updateWorld(WORLD_DATA);
 }
 function render()
 {
-    // Animations
-    Player.animator.animState = (Math.abs(Player.xVel) > 0.2) ? "walk" : "default";
-    Player.animator.animState = Player.jumped ? "jump" : Player.animator.animState;
-    Player.animator.animMirror = Math.abs(Player.xVel) > 0.1 ? Player.xVel < 0 : Player.animator.animMirror;
-
-    autoscroll(Player.x + (Player.width / 2), CELL_WIDTH / 3);
-    drawWorld(WORLD_DATA, Player.world);
-    drawSpriteBySize(Player.animator.getSprite(), Player.x, Player.y, Player.width, Player.height);
     if (selectedBlock != null)
     {
         drawRectOutline(selectedBlock.x*16-16, selectedBlock.y*16-16, selectedBlock.width*16, selectedBlock.height*16, "red")
     }
+    autoscroll((Player.x + (Player.width / 2)) * CELL_SIZE, CELL_WIDTH / 3);
+    drawWorld(WORLD_DATA);
 }
 
 /*
         Initialization
 */
 function beginGame() {
+    // Initialize World
+    loadWorld(DEFAULT_WORLD);
+
+    // Initialize Player
+    Player = new WorldObject("entity/player", 3, 9, {
+        jumped: false,
+        xVel: 0,
+        yVel: 0,
+        animSpeed: 0.2,
+        width:0.8
+    });
+    Player.loadAnimations({
+        "default":1,
+        "jump":1,
+        "tank":1,
+        "walk":3
+    }, true);
+
+    // Initialize Other Modules
     beginControls();
     beginDraw();
 }

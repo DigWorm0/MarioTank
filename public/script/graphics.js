@@ -1,6 +1,7 @@
 /*
         Variables
 */
+
 // Canvas
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -8,15 +9,11 @@ const ctx = canvas.getContext("2d");
 // Timing
 var last = getTimestamp(); // Time since Last Frame
 var dt = 0;
-
-// FPS
 var lastLoop = new Date();
 var fps = 0;
 
-// Colors
-var backgroundColor = DEFAULT_BACKGROUND_COLOR;
-
 // Camera
+var backgroundColor = DEFAULT_BACKGROUND_COLOR;
 var cameraX = 0;
 var cameraY = 0;
 
@@ -30,7 +27,7 @@ function frame()
     fps = 1000 / (thisLoop - lastLoop);
     lastLoop = thisLoop;
     
-    // TIming
+    // Timing
     var now = getTimestamp();
     
     dt = dt + Math.min(1, (now - last) / 1000);
@@ -71,14 +68,12 @@ function drawLine(x1, y1, x2, y2, color)
     ctx.lineTo(x2 - cameraX, y2 - cameraY);
     ctx.stroke();
 }
-
 function drawText(text, x, y, size, color)
 {
     ctx.fillStyle = color;
     ctx.font = size + "px Arial";
     ctx.fillText(text, x - cameraX, y - cameraY);
 }
-
 function drawSprite(sprite, x, y)
 {
     try
@@ -90,7 +85,6 @@ function drawSprite(sprite, x, y)
         
     }
 }
-
 function drawSpriteBySize(sprite, x, y, width, height)
 {
     try
@@ -113,9 +107,8 @@ function clearDraw()
 */
 function drawBlock(block, x, y)
 {
-    drawSprite(block.getSprite(), (x*CELL_SIZE) - CELL_SIZE, (y*CELL_SIZE) - CELL_SIZE, CELL_SIZE,CELL_SIZE)
+    drawSprite(block.sprite, (x*CELL_SIZE) - CELL_SIZE, (y*CELL_SIZE) - CELL_SIZE, CELL_SIZE,CELL_SIZE)
 }
-
 function drawBlocks(block)
 {
     for (var xPos = 0; xPos < block.width; xPos++)
@@ -126,10 +119,9 @@ function drawBlocks(block)
         }
     }
 }
-
-function drawWorld(world, worldTitle)
+function drawWorld(world)
 {
-    world[worldTitle].forEach(block => {
+    world.forEach(block => {
         if (block.noRepeat)
             drawBlock(block, block.x, block.y);
         else
@@ -141,7 +133,7 @@ function drawWorld(world, worldTitle)
 /*
         Entity
 */
-function autoscroll(x, range) // Range is from (Least Strict) 0 - 8 (Most Strict)
+function autoscroll(x, range)
 {
     if (x - cameraX > CELL_SIZE * (CELL_WIDTH - range))
     {
@@ -159,47 +151,9 @@ function autoscroll(x, range) // Range is from (Least Strict) 0 - 8 (Most Strict
 }
 
 /*
-        Entity Animation Manager
-*/
-class Animator
-{
-    constructor(sprites, options)
-    {
-        this.sprites = sprites;
-        this.animMirror = false;
-        this.animState = "default";
-        this.animFrame = 0;
-        this.animSpeed = 150;
-
-        for (var option in options)
-        {
-            this[option] = options[option];
-        }
-
-        this.animInterval = setInterval(() => {
-            this.animFrame++;
-            var realAnimState = this.animMirror ? this.animState + "_flip" : this.animState;
-            if (this.animFrame >= this.sprites[realAnimState].length)
-                this.animFrame = 0;
-        }, this.animSpeed);
-    }
-
-    getSprite()
-    {
-        var realAnimState = this.animMirror ? this.animState + "_flip" : this.animState;
-        if (this.animFrame >= this.sprites[realAnimState].length)
-            this.animFrame = 0;
-        return this.sprites[realAnimState][this.animFrame];
-    }
-}
-
-/*
         Initialization
 */
 function beginDraw() {
-    // Defaults
     ctx.imageSmoothingEnabled = false;
-
-    // Loop
     requestAnimationFrame(frame);
 }
