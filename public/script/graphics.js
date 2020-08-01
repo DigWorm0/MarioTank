@@ -69,11 +69,23 @@ function drawText(text, x, y, size, color)
 }
 function drawSprite(sprite, x, y)
 {
-    ctx.drawImage(sprite, x - cameraX, y - cameraY)
+    try {
+        ctx.drawImage(sprite, x - cameraX, y - cameraY)
+    }
+    catch
+    {
+
+    }
 }
 function drawSpriteBySize(sprite, x, y, width, height)
 {
-    ctx.drawImage(sprite, x - cameraX, y - cameraY, width, height)
+    try {
+        ctx.drawImage(sprite, x - cameraX, y - cameraY, width, height)
+    }
+    catch
+    {
+
+    }
 }
 
 function clearDraw()

@@ -29,7 +29,7 @@ function render()
 */
 function beginGame() {
     // Initialize World
-    loadWorld(DEFAULT_WORLD);
+    loadWorld(currentWorld);
 
     // Initialize Player
     Player = new WorldObject("entity/player", 3, 9, {
