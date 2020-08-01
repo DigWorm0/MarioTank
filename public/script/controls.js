@@ -66,8 +66,8 @@ function beginControls()
     var yScale = document.getElementById("canvas").height/document.body.clientHeight;
 
     document.getElementById("canvas").addEventListener("click", function(event) {
-        for (var i = 0; i < WORLD_DATA[Player.world].length; i++) {
-            const block = WORLD_DATA[Player.world][i];
+        for (var i = 0; i < WORLD_DATA.length; i++) {
+            const block = WORLD_DATA[i];
             var collides = checkCollisions(event.x*xScale + cameraX, event.y*yScale + cameraY, 0, 0, block.x * CELL_SIZE - CELL_SIZE, block.y * CELL_SIZE - CELL_SIZE, block.width * CELL_SIZE, block.height * CELL_SIZE)
             if (collides)
             {
@@ -123,20 +123,20 @@ function updateEditor(block, index)
 
 function newBlock()
 {
-    WORLD_DATA[Player.world].push(new WorldObject(
+    WORLD_DATA.push(new WorldObject(
         "block/question_1",
-        Math.round(Player.x / 16),
-        Math.round(Player.y / 16),
+        Math.round(Player.x),
+        Math.round(Player.y),
         {}
     ));
-    updateEditor(WORLD_DATA[Player.world][WORLD_DATA[Player.world].length - 1], WORLD_DATA[Player.world].length - 1);
+    updateEditor(WORLD_DATA[WORLD_DATA.length - 1], WORLD_DATA.length - 1);
 }
 
 function delBlock()
 {
     if (selectedBlock != null)
     {
-        WORLD_DATA[Player.world].splice(selectedIndex, 1);
+        WORLD_DATA.splice(selectedIndex, 1);
         selectedBlock = null;
         selectedIndex = -1;
     }
@@ -145,9 +145,9 @@ function delBlock()
 function downloadMap()
 {
     var json = [];
-    for (var i = 0; i < WORLD_DATA[Player.world].length; i++)
+    for (var i = 0; i < WORLD_DATA.length; i++)
     {
-        const block = WORLD_DATA[Player.world][i];
+        const block = WORLD_DATA[i];
 
         var prop = {};
         if (block.height != 1)
