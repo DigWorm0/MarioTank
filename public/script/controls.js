@@ -174,7 +174,7 @@ function downloadMap()
     {
         const block = WORLD_DATA[i];
 
-        if (block.type == "entity/player")
+        if (block.type == "entity/player-1")
             continue;
 
         var prop = {};
