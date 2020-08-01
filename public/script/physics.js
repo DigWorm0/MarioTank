@@ -7,6 +7,7 @@ function addMotion(entity)
 
     entity.y += entity.yVel;
 
+    
     if (!verifyMovement(entity))
     {
         entity.y -= entity.yVel;
@@ -16,6 +17,7 @@ function addMotion(entity)
         
         entity.yVel = 0;
     }
+    
 
     entity.x += entity.xVel;
 
@@ -35,21 +37,35 @@ function addMotion(entity)
 */
 function verifyMovement(entity)
 {
-    for (var i = 0; i < WORLD_DATA[entity.world].length; i++) {
-        const block = WORLD_DATA[entity.world][i];
-        if (block.solid)
+    for (var i = 0; i < WORLD_DATA.length; i++) {
+        const block = WORLD_DATA[i];
+        if (block.solid && block != entity)
         {
-            var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x * CELL_SIZE - CELL_SIZE, block.y * CELL_SIZE - CELL_SIZE, block.width * CELL_SIZE, block.height * CELL_SIZE)
+            var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
             if (collides)
             {
-                if (block.breakable)
-                {
-                    //entity.xVel=0;
-                    //WORLD_DATA[entity.world].splice(i, 1);
-                }
                 return false;
             }
         }
     }
     return true;
+}
+function checkCollisions(x1, y1, w1, h1, x2, y2, w2, h2) {
+    if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2){
+        return false;
+    }
+    return true;
+}
+
+/*
+        World Update
+*/
+function updateWorld(world)
+{
+    world.forEach(block => {
+        if (block.type in DefaultAI)
+        {
+            DefaultAI[block.type](block);
+        }
+    });
 }

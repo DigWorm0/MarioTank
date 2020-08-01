@@ -1,22 +1,7 @@
 /*
         Variables
 */
-const Player = {
-    x: 3*CELL_SIZE, //3
-    y: 9*CELL_SIZE,
-    width: 13, // 128
-    height: 16, // 64
-    xVel: 0,
-    yVel: 0,
-    jumped: false,
-    animator: new Animator(loadAnimSprites("entity/player", {
-        "default": 1,
-        "jump": 1,
-        "walk": 3,
-        "tank": 1
-    }), {}),
-    world: DEFAULT_WORLD
-}
+var Player = {};
 
 /*
         Loops
@@ -30,31 +15,41 @@ function update()
     }
     Player.xVel += Controls.horizontal * PLAYER_SPEED;
 
+    Player.state = (Math.abs(Player.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
+    Player.state = Player.jumped ? "jump" : Player.state;
+    Player.animFlip = Math.abs(Player.xVel) > 0.01 ? Player.xVel < 0 : Player.animFlip;
+
     addMotion(Player);
+    updateWorld(WORLD_DATA);
 }
 function render()
 {
-    // Animations
-    Player.animator.animState = (Math.abs(Player.xVel) > 0.2) ? "walk" : "default";
-    Player.animator.animState = Player.jumped ? "jump" : Player.animator.animState;
-    Player.animator.animMirror = Math.abs(Player.xVel) > 0.1 ? Player.xVel < 0 : Player.animator.animMirror;
-
-    //Player.animator.animState = "tank";
-
-    autoscroll(Player.x + (Player.width / 2), CELL_WIDTH / 3);
-    drawWorld(WORLD_DATA, Player.world);
-    drawSpriteBySize(Player.animator.getSprite(), Player.x, Player.y, Player.width, Player.height);
-    
-    //drawText(Math.round(fps), cameraX + 10, cameraY + 20, 20, fps >= 60 ? "red" : "black");
-    //drawLine(Player.x + 8, WORLD_DATA[DEFAULT_WORLD][5].y*16 - 8, WORLD_DATA[DEFAULT_WORLD][5].x*16 - 8, WORLD_DATA[DEFAULT_WORLD][5].y*16 - 8, "red")
-    //drawLine(Player.x + 8, WORLD_DATA[DEFAULT_WORLD][5].y*16 - 8,Player.x + 8,Player.y + 8, "red")
-
+    autoscroll((Player.x + (Player.width / 2)) * CELL_SIZE, CELL_WIDTH / 3);
+    drawWorld(WORLD_DATA);
 }
 
 /*
         Initialization
 */
 function beginGame() {
+    // Initialize World
+    loadWorld(DEFAULT_WORLD);
+
+    // Initialize Player
+    Player = new WorldObject("entity/player", 3, 9, {
+        jumped: false,
+        xVel: 0,
+        yVel: 0,
+        animSpeed: 0.16
+    });
+    Player.loadAnimations({
+        "default":1,
+        "jump":1,
+        "tank":1,
+        "walk":3
+    }, true);
+
+    // Initialize Other Modules
     beginControls();
     beginDraw();
 }

@@ -10,11 +10,11 @@ const CELL_HEIGHT = 15;
 const CELL_WIDTH = 28;
 
 // Physics
-const PLAYER_SPEED = .2;
 const X_MOTION_DAMPING = .9;
 const Y_MOTION_DAMPING = .999;
-const GRAVITY = .2;
-const JUMP_FORCE = 6;
+const PLAYER_SPEED = .0125;
+const GRAVITY = .0125;
+const JUMP_FORCE = .375;
 
 // Environment
 const DEFAULT_WORLD = "1-1";
