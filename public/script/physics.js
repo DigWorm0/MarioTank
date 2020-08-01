@@ -54,6 +54,7 @@ function verifyMovement(entity)
             {
                 if (block.type == "question/block-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && block.state != "used") {
                     block.state="used";
+                    console.log(block.prop)
                     hop(block);
                 }
                 if (block.type == "brick/float-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && !(block.jumped)) {
