@@ -186,8 +186,8 @@ function downloadMap()
             prop.noRepeat = block.noRepeat;
         if (block.solid != true)
             prop.solid = block.solid;
-        if (selectedBlock.prop != "")
-            prop.prop = selectedBlock.prop;
+        if (block.prop != "")
+            prop.prop = block.prop;
         
         json.blocks.push({
             type: block.type,
