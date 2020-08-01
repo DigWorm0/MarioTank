@@ -15,10 +15,6 @@ function update()
     }
     Player.xVel += Controls.horizontal * PLAYER_SPEED;
 
-    Player.state = (Math.abs(Player.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
-    Player.state = Player.jumped ? "jump" : Player.state;
-    Player.animFlip = Math.abs(Player.xVel) > 0.01 ? Player.xVel < 0 : Player.animFlip;
-
     addMotion(Player);
     updateWorld(WORLD_DATA);
 }
@@ -40,7 +36,8 @@ function beginGame() {
         jumped: false,
         xVel: 0,
         yVel: 0,
-        animSpeed: 0.16
+        animSpeed: 0.2,
+        width:0.8
     });
     Player.loadAnimations({
         "default":1,

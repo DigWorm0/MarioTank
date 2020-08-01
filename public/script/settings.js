@@ -15,6 +15,7 @@ const Y_MOTION_DAMPING = .999;
 const PLAYER_SPEED = .0125;
 const GRAVITY = .0125;
 const JUMP_FORCE = .375;
+const BOUNCE_FORCE = .1;
 
 // Environment
 const DEFAULT_WORLD = "1-1";

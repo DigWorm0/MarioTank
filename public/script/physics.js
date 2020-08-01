@@ -37,6 +37,7 @@ function addMotion(entity)
 */
 function verifyMovement(entity)
 {
+    var collision = true;
     for (var i = 0; i < WORLD_DATA.length; i++) {
         const block = WORLD_DATA[i];
         if (block.solid && block != entity)
@@ -44,11 +45,19 @@ function verifyMovement(entity)
             var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
             if (collides)
             {
-                return false;
+                if (block.type == "block/question_1" && (entity.x + entity.width / 2) > block.x && (entity.x + entity.width / 2) < block.x + block.width && entity.yVel < 0)
+                    block.sprite = loadSprite("/sprites/block/question_used_1.png");
+                if (block.type == "entity/goomba" && entity.yVel > 0.02) {
+                    WORLD_DATA.splice(i, 1)
+                    entity.yVel = -BOUNCE_FORCE;
+
+                }
+                else
+                    collision = false;
             }
         }
     }
-    return true;
+    return collision;
 }
 function checkCollisions(x1, y1, w1, h1, x2, y2, w2, h2) {
     if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2){
