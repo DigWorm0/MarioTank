@@ -20,6 +20,7 @@ class WorldObject
         this.solid = true;
         this.noRepeat = false;
         this.breakable = true;
+        this.prop = "";
         this.sprite = loadSprite("/sprites/" + type + ".png")
         this.frame = (obj) => {};
 

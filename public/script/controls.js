@@ -90,6 +90,7 @@ function editBlock()
         selectedBlock.y = parseFloat(document.getElementById("blockY").value);
         selectedBlock.width = parseInt(document.getElementById("blockW").value);
         selectedBlock.height = parseInt(document.getElementById("blockH").value);
+        selectedBlock.prop = document.getElementById("blockProp").value;
         selectedBlock.noRepeat = document.getElementById("blockRepeat").checked;
         selectedBlock.solid = document.getElementById("blockSolid").checked;
 
@@ -106,6 +107,7 @@ function updateEditor(block, index)
     document.getElementById("blockY").value = block.y;
     document.getElementById("blockH").value = block.height;
     document.getElementById("blockW").value = block.width;
+    document.getElementById("blockProp").value = block.prop;
     document.getElementById("blockRepeat").checked = block.noRepeat;
     document.getElementById("blockSolid").checked = block.solid;
 
@@ -155,6 +157,8 @@ function dupBlock()
             prop.noRepeat = selectedBlock.noRepeat;
         if (selectedBlock.solid != true)
             prop.solid = selectedBlock.solid;
+        if (selectedBlock.prop != "")
+            prop.prop = selectedBlock.prop;
         WORLD_DATA.push(new WorldObject(selectedBlock.type, selectedBlock.x + 1, selectedBlock.y, prop))
         selectedBlock = WORLD_DATA[WORLD_DATA.length - 1];
         selectedIndex = WORLD_DATA.length - 1;
@@ -182,6 +186,8 @@ function downloadMap()
             prop.noRepeat = block.noRepeat;
         if (block.solid != true)
             prop.solid = block.solid;
+        if (selectedBlock.prop != "")
+            prop.prop = selectedBlock.prop;
         
         json.blocks.push({
             type: block.type,
