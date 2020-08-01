@@ -98,7 +98,10 @@ function clearDraw()
 */
 function drawBlock(block, x, y)
 {
-    drawSprite(block.sprite, (x*CELL_SIZE) - CELL_SIZE, (y*CELL_SIZE) - CELL_SIZE, CELL_SIZE,CELL_SIZE)
+    if (block.type == "entity/goomba-1" && block.state == "squash")
+        drawSpriteBySize(block.sprite, (x*CELL_SIZE) - CELL_SIZE, (y*CELL_SIZE) - CELL_SIZE, CELL_SIZE,CELL_SIZE/3)
+    else
+        drawSprite(block.sprite, (x*CELL_SIZE) - CELL_SIZE, (y*CELL_SIZE) - CELL_SIZE)
 }
 function drawBlocks(block)
 {

@@ -8,12 +8,15 @@ var Player = {};
 */
 function update()
 {
-    if (Controls.up && !Player.jumped)
+    if (Controls.up && Player.onground)
     {
-        Player.yVel -= JUMP_FORCE
         Player.jumped = true;
+        Player.yVel -= JUMP_FORCE
     }
-    Player.xVel += Controls.horizontal * PLAYER_SPEED;
+    if (Player.onground)
+        Player.xVel += Controls.horizontal * PLAYER_SPEED;
+    else
+        Player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
 
     addMotion(Player);
     updateWorld(WORLD_DATA);
@@ -33,7 +36,7 @@ function beginGame() {
 
     // Initialize Player
     Player = new WorldObject("entity/player-1", 3, 9, {
-        jumped: false,
+        onground: false,
         xVel: 0,
         yVel: 0,
         animSpeed: 0.2,

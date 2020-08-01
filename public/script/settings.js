@@ -13,9 +13,10 @@ const CELL_WIDTH = 28;
 const X_MOTION_DAMPING = .9;
 const Y_MOTION_DAMPING = .999;
 const PLAYER_SPEED = .0125;
+const PLAYER_AIR_SPEED = .01;
 const GRAVITY = .0125;
 const JUMP_FORCE = .375;
-const BOUNCE_FORCE = .1;
+const BOUNCE_FORCE = .15;
 
 // Environment
 const DEFAULT_WORLD = "1-1";
