@@ -3,13 +3,13 @@
 */
 
 var DefaultAI = {
-    "entity/player":(entity) => {
+    "entity/player-1":(entity) => {
         entity.state = (Math.abs(entity.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
         entity.state = entity.jumped ? "jump" : entity.state;
         entity.animFlip = Math.abs(entity.xVel) > 0.01 ? entity.xVel < 0 : entity.animFlip;
         runAnimation(entity);
     },
-    "entity/goomba":(entity) => {
+    "entity/goomba-1":(entity) => {
         if (!(entity.init))
         {
             entity.direction = true;
