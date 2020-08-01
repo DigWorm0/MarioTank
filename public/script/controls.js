@@ -86,8 +86,8 @@ function editBlock()
     if(selectedBlock != null)
     {
         selectedBlock.type = document.getElementById("blockType").value;
-        selectedBlock.x = parseInt(document.getElementById("blockX").value);
-        selectedBlock.y = parseInt(document.getElementById("blockY").value);
+        selectedBlock.x = parseFloat(document.getElementById("blockX").value);
+        selectedBlock.y = parseFloat(document.getElementById("blockY").value);
         selectedBlock.width = parseInt(document.getElementById("blockW").value);
         selectedBlock.height = parseInt(document.getElementById("blockH").value);
         selectedBlock.noRepeat = document.getElementById("blockRepeat").checked;
@@ -142,12 +142,36 @@ function delBlock()
     }
 }
 
+function dupBlock()
+{
+    if (selectedBlock != null)
+    {
+        var prop = {};
+        if (selectedBlock.height != 1)
+            prop.height = selectedBlock.height;
+        if (selectedBlock.width != 1)
+            prop.width = selectedBlock.width;
+        if (selectedBlock.noRepeat != false)
+            prop.noRepeat = selectedBlock.noRepeat;
+        if (selectedBlock.solid != true)
+            prop.solid = selectedBlock.solid;
+        WORLD_DATA.push(new WorldObject(selectedBlock.type, selectedBlock.x + 1, selectedBlock.y, prop))
+        selectedBlock = WORLD_DATA[WORLD_DATA.length - 1];
+        selectedIndex = WORLD_DATA.length - 1;
+    }
+}
+
 function downloadMap()
 {
-    var json = [];
+    var json = {};
+    json.backgroundColor = backgroundColor;
+    json.blocks = [];
     for (var i = 0; i < WORLD_DATA.length; i++)
     {
         const block = WORLD_DATA[i];
+
+        if (block.type == "entity/player")
+            continue;
 
         var prop = {};
         if (block.height != 1)
@@ -159,14 +183,30 @@ function downloadMap()
         if (block.solid != true)
             prop.solid = block.solid;
         
-        json.push({
+        json.blocks.push({
             type: block.type,
             x: block.x,
             y: block.y,
             properties: prop
         });
     }
-    download(Player.world + ".json", JSON.stringify(json));
+    download(currentWorld + ".json", JSON.stringify(json));
+}
+function changeWorld()
+{
+    var world = prompt("Enter the World Number", currentWorld);
+    if (world == null || world == "")
+        return;
+    selectedBlock = null;
+    selectedIndex = -1;
+    Player.x = 3;
+    Player.y = 9;
+    loadWorld(world);
+}
+
+function editWorld()
+{
+    backgroundColor = document.getElementById("backgroundColor").value;
 }
 
 function download(filename, text) {
@@ -180,4 +220,4 @@ function download(filename, text) {
     element.click();
   
     document.body.removeChild(element);
-  }
+}

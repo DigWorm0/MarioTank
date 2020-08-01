@@ -3,7 +3,6 @@
 */
 // Graphics
 const MAX_FPS = 60;
-const DEFAULT_BACKGROUND_COLOR = "#5c94fc";
 const CAMERA_DAMPING = 0.85;
 const CELL_SIZE = 16;
 const CELL_HEIGHT = 15;

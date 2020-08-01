@@ -13,9 +13,11 @@ var lastLoop = new Date();
 var fps = 0;
 
 // Camera
-var backgroundColor = DEFAULT_BACKGROUND_COLOR;
 var cameraX = 0;
 var cameraY = 0;
+
+// No Sprite
+var noSprite = {};
 
 /*
         Loop Timing
@@ -82,7 +84,14 @@ function drawSprite(sprite, x, y)
     }
     catch (e)
     {
-        
+        try
+        {
+            ctx.drawImage(noSprite, x - cameraX, y - cameraY)
+        }
+        catch (e)
+        {
+            
+        }
     }
 }
 function drawSpriteBySize(sprite, x, y, width, height)
@@ -93,7 +102,14 @@ function drawSpriteBySize(sprite, x, y, width, height)
     }
     catch (e)
     {
-
+        try
+        {
+            ctx.drawImage(noSprite, x - cameraX, y - cameraY, width, height)
+        }
+        catch (e)
+        {
+            
+        }
     }
 }
 
@@ -155,5 +171,6 @@ function autoscroll(x, range)
 */
 function beginDraw() {
     ctx.imageSmoothingEnabled = false;
+    noSprite = loadSprite("sprites/null.png");
     requestAnimationFrame(frame);
 }

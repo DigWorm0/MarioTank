@@ -27,7 +27,7 @@ input {
 
 img {
     position: absolute;
-    bottom:0;
+    bottom:10px;
 }
 
 .world-edit {
@@ -49,4 +49,10 @@ img {
 
 .world-edit:hover {
     opacity: 1;
+}
+
+#world-data {
+    left: unset;
+    right: 10px;
+    height:150px;
 }

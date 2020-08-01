@@ -20,6 +20,7 @@ var DefaultAI = {
                 "default":2
             }, true);
         }
+        /*
         var collisions = 0;
         for (var i = 0; i < WORLD_DATA.length; i++) {
             const block = WORLD_DATA[i];
@@ -38,7 +39,7 @@ var DefaultAI = {
             entity.x += entity.speed;
         else
             entity.x -= entity.speed;
-        
+        */
         runAnimation(entity);
     }
 }

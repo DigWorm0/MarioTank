@@ -2,6 +2,8 @@
         Variables
 */
 var WORLD_DATA = [];
+var backgroundColor = "black";
+var currentWorld = DEFAULT_WORLD;
 
 /*
         Class
@@ -58,10 +60,18 @@ function loadSprite(url)
 function loadWorld(world)
 {
     var start = new Date().getMilliseconds();
+    currentWorld = world;
+    WORLD_DATA = [];
     $.getJSON('/worldData/' + world + '.json', function(data) {
-        data.forEach(element => {
+        data.blocks.forEach(element => {
             WORLD_DATA.push(new WorldObject(element.type, element.x, element.y, element.properties));
         });
+        backgroundColor = data.backgroundColor;
+        document.getElementById("backgroundColor").value = backgroundColor;
+        document.getElementById("worldTitle").innerText = currentWorld;
+        WORLD_DATA.push(Player);
+    }).fail(function(d) {
+        document.getElementById("worldTitle").innerText = currentWorld;
         WORLD_DATA.push(Player);
     });
     console.log("Loaded " + world + " in " + (new Date().getMilliseconds() - start) + "ms");

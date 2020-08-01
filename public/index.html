@@ -16,10 +16,16 @@
             <b>Width:</b><input id="blockW" type="number" placeholder="Width" onchange="editBlock()"/><br />
             <b>No Repeat:</b><input id="blockRepeat" type="checkbox" onchange="editBlock()"/><br />
             <b>Solid:</b><input id="blockSolid" type="checkbox" onchange="editBlock()"/><br />
-            <button type="button" onclick="newBlock()">New Block</button>
-            <button type="button" onclick="delBlock()">Delete Block</button>
-            <button type="button" onclick="downloadMap()">Download</button><br />
+            <button type="button" onclick="newBlock()">Add</button>
+            <button type="button" onclick="delBlock()">Delete</button>
+            <button type="button" onclick="downloadMap()">Download</button>
+            <button type="button" onclick="changeWorld()">Change</button><br />
+            <button type="button" onclick="dupBlock()">Duplicate</button><br />
             <img src="/" width="300" height="200" id="blockImg" />
+        </div>
+        <div class="world-edit" id="world-data">
+            <h2 id="worldTitle">World Data</h2>
+            <b>Background:</b><input id="backgroundColor" type="text" placeholder="type" onchange="editWorld()"/><br />
         </div>
         <canvas id="canvas" width="448" height="240"></canvas>
 
