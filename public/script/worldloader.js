@@ -39,9 +39,9 @@ class WorldObject
                 this.animSprites[sprite + "_flip"] = [];
             for (var i = 0; i < animations[sprite]; i++)
             {
-                this.animSprites[sprite].push(loadSprite("/sprites/" + this.type + "/" + sprite + (i + 1) + ".png"));
+                this.animSprites[sprite].push(loadSprite("/sprites/" + this.type + "/" + sprite + "-" + (i + 1) + ".png"));
                 if (loadFlip)
-                    this.animSprites[sprite + "_flip"].push(loadSprite("/sprites/" + this.type + "/" + sprite + (i + 1) + "_flip.png"));
+                    this.animSprites[sprite + "_flip"].push(loadSprite("/sprites/" + this.type + "/" + sprite + "-" + (i + 1) + "_flip.png"));
             }
         }
     }

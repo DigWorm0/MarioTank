@@ -32,7 +32,7 @@ function beginGame() {
     loadWorld(currentWorld);
 
     // Initialize Player
-    Player = new WorldObject("entity/player", 3, 9, {
+    Player = new WorldObject("entity/player-1", 3, 9, {
         jumped: false,
         xVel: 0,
         yVel: 0,
@@ -42,7 +42,6 @@ function beginGame() {
     Player.loadAnimations({
         "default":1,
         "jump":1,
-        "tank":1,
         "walk":3
     }, true);
 

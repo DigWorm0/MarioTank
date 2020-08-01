@@ -3,13 +3,13 @@
 */
 
 var DefaultAI = {
-    "entity/player":(entity) => {
+    "entity/player-1":(entity) => {
         entity.state = (Math.abs(entity.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
         entity.state = entity.jumped ? "jump" : entity.state;
         entity.animFlip = Math.abs(entity.xVel) > 0.01 ? entity.xVel < 0 : entity.animFlip;
         runAnimation(entity);
     },
-    "entity/goomba":(entity) => {
+    "entity/goomba-1":(entity) => {
         if (!(entity.init))
         {
             entity.direction = true;
@@ -40,8 +40,24 @@ var DefaultAI = {
             entity.x -= entity.speed;
         
         runAnimation(entity);
+    },
+    "question/block-1":(entity) => {
+        if (!(entity.init))
+        {
+            entity.init = true;
+            entity.animSpeed = 0.1;
+            entity.loadAnimations({
+                "default":3,
+                "used":1
+            }, true);
+        }
+        bounceAnimation(entity);
     }
 }
+
+/*
+        Animations
+*/
 
 function runAnimation(entity)
 {
@@ -59,5 +75,29 @@ function runAnimation(entity)
     entity.animFrame += entity.animSpeed;
     if (entity.animFrame >= entity.animSprites[realAnimState].length)
         entity.animFrame = 0;
+    entity.sprite = entity.animSprites[realAnimState][Math.floor(entity.animFrame)];
+}
+
+function bounceAnimation(entity)
+{
+    if (!("animSprites" in entity) || !("animSpeed" in entity))
+        return;
+    if (!(entity.animInit))
+    {
+        entity.state = "default";
+        entity.animFlip = false;
+        entity.animFrame = 0;
+        entity.animInit = true;
+    }
+
+    var realAnimState = entity.animFlip ? entity.state + "_flip" : entity.state;
+    entity.animFrame += entity.animSpeed;
+    if (entity.animFrame >= entity.animSprites[realAnimState].length || entity.animFrame <= 0) {
+        entity.animSpeed *= -1;
+        entity.animFrame += entity.animSpeed * 10;
+    }
+    if (entity.animFrame >= entity.animSprites[realAnimState].length || entity.animFrame <= 0) {
+        entity.animFrame = 0;
+    }
     entity.sprite = entity.animSprites[realAnimState][Math.floor(entity.animFrame)];
 }

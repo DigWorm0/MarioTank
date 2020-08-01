@@ -45,9 +45,9 @@ function verifyMovement(entity)
             var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
             if (collides)
             {
-                if (block.type == "block/question_1" && (entity.x + entity.width / 2) > block.x && (entity.x + entity.width / 2) < block.x + block.width && entity.yVel < 0)
-                    block.sprite = loadSprite("/sprites/block/question_used_1.png");
-                if (block.type == "entity/goomba" && entity.yVel > 0.02) {
+                if (block.type == "question/block-1" && (entity.x + entity.width / 2) > block.x && (entity.x + entity.width / 2) < block.x + block.width && entity.yVel < 0)
+                    block.state="used";
+                if (block.type == "entity/goomba-1" && entity.yVel > 0.02) {
                     WORLD_DATA.splice(i, 1)
                     entity.yVel = -BOUNCE_FORCE;
 
