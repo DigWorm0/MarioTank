@@ -61,10 +61,10 @@ function drawLine(x1, y1, x2, y2, color)
     ctx.lineTo(x2 - cameraX, y2 - cameraY);
     ctx.stroke();
 }
-function drawText(text, x, y, size, color)
+function drawText(text, x, y, font, color)
 {
     ctx.fillStyle = color;
-    ctx.font = size + "px Arial";
+    ctx.font = font;
     ctx.fillText(text, x - cameraX, y - cameraY);
 }
 function drawSprite(sprite, x, y)
@@ -122,6 +122,27 @@ function drawWorld(world)
             drawBlocks(block);
         block.frame(block);
     });
+}
+
+/*
+        Text Drawing
+*/
+
+function drawScores()
+{
+    drawText("MARIO", 10 + cameraX, 20, "8px PressStart2P", "white");
+    drawText(pad(Player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("x" + pad(Player.coins, 2), 100 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
+    drawText(currentWorld, 158 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
+    drawText("345", 225 + cameraX, 30, "8px PressStart2P", "white");
+}
+
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
 }
 
 /*

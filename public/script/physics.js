@@ -54,7 +54,12 @@ function verifyMovement(entity)
             {
                 if (block.type == "question/block-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && block.state != "used") {
                     block.state="used";
-                    console.log(block.prop)
+                    if (block.prop != "")
+                        WORLD_DATA.push(new WorldObject(block.prop, block.x, block.y - 1, {
+                            "solid":false
+                        }))
+                    Player.score += 200;
+                    Player.coins += 1;
                     hop(block);
                 }
                 if (block.type == "brick/float-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && !(block.jumped)) {
@@ -71,6 +76,8 @@ function verifyMovement(entity)
                         block.state = "squash";
                         block.solid = false;
                         block.y += 0.75;
+
+                        Player.score += 100;
 
                         if (Controls.up) {
                             entity.yVel = -BOUNCE_FORCE * 2;

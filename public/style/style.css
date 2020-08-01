@@ -1,9 +1,15 @@
+@font-face {
+    font-family: "PressStart2P";
+    src: url(/style/font.ttf);
+}
+
 html, body {
     height: 100%;
     width: 100%;
     overflow: hidden;
     margin:0;
     background-color: black;
+    font-family: "Press Start 2P";
 }
 
 canvas {
