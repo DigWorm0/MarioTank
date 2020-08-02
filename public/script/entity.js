@@ -10,6 +10,7 @@ var DefaultAI = {
             entity.die = () => {
                 //window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
                 WORLD_DATA = [];
+                restartGame();
             }
         }
         entity.state = (Math.abs(entity.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";

@@ -14,10 +14,12 @@ const SHOW_FPS = true;
 const X_MOTION_DAMPING = .9;
 const Y_MOTION_DAMPING = .999;
 const PLAYER_SPEED = .0125;
+const PLAYER_SPRINT_SPEED = .0175;
 const PLAYER_AIR_SPEED = .01;
 const GRAVITY = .0125;
-const JUMP_FORCE = .375;
-const BOUNCE_FORCE = .15;
+const JUMP_FORCE = .25; // .375
+const CONTINUOUS_JUMP_FORCE = .023;
+const BOUNCE_FORCE = .1;
 
 // Environment
 const DEFAULT_WORLD = "1-1";
@@ -27,7 +29,8 @@ const CONTROL_KEY_CODES = {
     up: 38,
     down: 40,
     left: 37,
-    right: 39
+    right: 39,
+    sprint: 16
 };
 
 /*

@@ -149,6 +149,10 @@ function drawScores()
         drawText("FPS", 290 + cameraX, 20, "8px PressStart2P", "white");
         drawText(Math.floor(slowFps), 294 + cameraX, 30, "8px PressStart2P", "white");
     }
+    if (Player.blackScreen)
+    {
+        drawText("WORLD " + currentWorld, 170 + cameraX, 100, "8px PressStart2P", "white");
+    }
 }
 
 function pad(num, size) {
