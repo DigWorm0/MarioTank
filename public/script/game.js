@@ -42,7 +42,8 @@ function render()
 {
     //canvas.width = window.innerWidth / 4;
     if (!Player.blackScreen) {
-        autoscroll((Player.x + (Player.width / 2)) * CELL_SIZE, CELL_WIDTH / 3);
+        if (autoScroll)
+            autoscroll((Player.x + (Player.width / 2)) * CELL_SIZE, CELL_WIDTH / 3);
         drawWorld(WORLD_DATA);
     }
     else

@@ -139,7 +139,7 @@ function drawScores()
     drawText(pad(Player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");
     drawText("x" + pad(Player.coins, 2), 100 + cameraX, 30, "8px PressStart2P", "white");
     drawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
-    drawText(currentWorld, 158 + cameraX, 30, "8px PressStart2P", "white");
+    drawText(displayName, 158 + cameraX, 30, "8px PressStart2P", "white");
     drawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
     drawText(pad(time, 3), 225 + cameraX, 30, "8px PressStart2P", "white");
 
@@ -151,7 +151,7 @@ function drawScores()
     }
     if (Player.blackScreen)
     {
-        drawText("WORLD " + currentWorld, 170 + cameraX, 100, "8px PressStart2P", "white");
+        drawText("WORLD " + displayName, 170 + cameraX, 100, "8px PressStart2P", "white");
     }
 }
 

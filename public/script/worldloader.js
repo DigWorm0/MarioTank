@@ -4,6 +4,8 @@
 var WORLD_DATA = [];
 var backgroundColor = "black";
 var currentWorld = DEFAULT_WORLD;
+var displayName = DEFAULT_WORLD;
+var autoScroll = true;
 
 /*
         Class
@@ -73,6 +75,8 @@ function loadWorld(world, spawn)
             WORLD_DATA.push(new WorldObject(element.type, element.x, element.y, element.properties));
         });
         backgroundColor = data.backgroundColor;
+        displayName = data.displayName;
+        autoScroll = data.autoScroll;
         WORLD_DATA.push(Player);
     });
     console.log("Loaded " + world + " in " + (new Date().getMilliseconds() - start) + "ms");
