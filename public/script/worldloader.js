@@ -60,7 +60,7 @@ function loadSprite(url)
     sprite.src = url;
     return sprite;
 }
-function loadWorld(world, spawn)
+function loadWorld(world, spawn="spawn/default")
 {
     var start = new Date().getMilliseconds();
     currentWorld = world;
@@ -77,6 +77,7 @@ function loadWorld(world, spawn)
         backgroundColor = data.backgroundColor;
         displayName = data.displayName;
         autoScroll = data.autoScroll;
+        cameraX = 0;
         WORLD_DATA.push(Player);
     });
     console.log("Loaded " + world + " in " + (new Date().getMilliseconds() - start) + "ms");

@@ -8,35 +8,39 @@ var Player = {};
 */
 function update()
 {
-    if (Controls.up && Player.onground && !Player.jumping)
+    if (!Player.freeze)
     {
-        Player.jumped = true;
-        Player.jumping = true;
-        setTimeout(function() {
+        if (Controls.up && Player.onground && !Player.jumping)
+        {
+            Player.jumped = true;
+            Player.jumping = true;
+            setTimeout(function() {
+                Player.jumping = false;
+            }, 100);
+            Player.yVel -= JUMP_FORCE;
+        }
+        if (!Controls.up && Player.jumping)
+        {
             Player.jumping = false;
-        }, 100);
-        Player.yVel -= JUMP_FORCE;
-    }
-    if (!Controls.up && Player.jumping)
-    {
-        Player.jumping = false;
-    }
-    if (Player.jumping)
-    {
-        Player.yVel -= CONTINUOUS_JUMP_FORCE
-    }
-    
-    if (Player.onground && Controls.sprint)
-        Player.xVel += Controls.horizontal * PLAYER_SPRINT_SPEED;
-    else if (Player.onground)
-        Player.xVel += Controls.horizontal * PLAYER_SPEED;
-    else
-        Player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
+        }
+        if (Player.jumping)
+        {
+            Player.yVel -= CONTINUOUS_JUMP_FORCE
+        }
+        
+        if (Player.onground && Controls.sprint)
+            Player.xVel += Controls.horizontal * PLAYER_SPRINT_SPEED;
+        else if (Player.onground)
+            Player.xVel += Controls.horizontal * PLAYER_SPEED;
+        else
+            Player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
 
-    if (!Player.blackScreen) {
-        addMotion(Player);
-        updateWorld(WORLD_DATA);
+        
     }
+    if (!Player.freezeGrav) {
+        addMotion(Player);
+    }
+    updateWorld(WORLD_DATA);
 }
 function render()
 {
@@ -72,12 +76,15 @@ function beginGame() {
         coins: 0,
         x:50,
         blackScreen:true,
-        jumping: false
+        jumping: false,
+        freeze:false,
+        freezeGrav: false
     });
     Player.loadAnimations({
         "default":1,
         "jump":1,
-        "walk":3
+        "walk":3,
+        "climb":1
     }, true);
 
     setTimeout(function() {
@@ -105,7 +112,8 @@ function restartGame()
     Player.loadAnimations({
         "default":1,
         "jump":1,
-        "walk":3
+        "walk":3,
+        "climb":1
     }, true);
 
     time = 400;

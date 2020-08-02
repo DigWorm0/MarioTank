@@ -13,10 +13,58 @@ var DefaultAI = {
                 restartGame();
             }
         }
-        entity.state = (Math.abs(entity.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
-        entity.state = entity.jumped ? "jump" : entity.state;
-        entity.animFlip = Math.abs(entity.xVel) > 0.01 ? entity.xVel < 0 : entity.animFlip;
+
+        if (!entity.freeze)
+        {
+            entity.state = (Math.abs(entity.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
+            entity.state = entity.jumped ? "jump" : entity.state;
+            entity.animFlip = Math.abs(entity.xVel) > 0.01 ? entity.xVel < 0 : entity.animFlip;         
+        }
         runAnimation(entity);
+
+        /*
+                Flag Animation
+        */
+        if (entity.x >= 198.5 && !entity.freeze)
+        {
+            entity.freeze = true;
+            entity.freezeGrav = true;
+            entity.x = 198.5;
+            entity.state = "climb";
+            setTimeout(function() {
+                entity.flagA = true;
+            }, 400)
+        }
+        if (entity.flagA)
+        {
+            if (entity.y <= 12)
+            {
+                entity.y += 0.1;
+            }
+            else
+            {
+                setTimeout(function() {
+                    entity.flagB = true;
+                    entity.freezeGrav = false;
+                    entity.state = "walk";
+                }, 400)
+            }
+        }
+        if (entity.flagB)
+        {
+            if (entity.x <= 205)
+            {
+                entity.x += 0.07;
+            }
+            else if (Player)
+            {
+                setTimeout(function() {
+                    loadWorld("1-2")
+                    restartGame();
+                }, 1000)
+                deleteFromWorld(Player);
+            }
+        }
     },
     "entity/goomba-1":(entity) => {
         if (!(entity.init))
