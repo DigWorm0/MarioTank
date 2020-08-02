@@ -107,6 +107,7 @@ function restartGame()
         "walk":3
     }, true);
 
+    time = 400;
     setTimeout(function() {
         // Initialize World
         loadWorld(currentWorld, "spawn/default");
