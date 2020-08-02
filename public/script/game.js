@@ -35,7 +35,8 @@ function update()
         else
             Player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
 
-        
+        if (time <= 0)
+            Player.die();
     }
     if (!Player.freezeGrav) {
         addMotion(Player);

@@ -46,67 +46,11 @@ function verifyMovement(entity)
     for (var i = 0; i < WORLD_DATA.length; i++) {
         const block = WORLD_DATA[i];
         var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
-        if (block.type.includes("coin/coin-") && block.type != "coin/coin-anim-1" && collides)
+        if (block != entity && collides)
         {
-            Player.coins++;
-            WORLD_DATA.splice(i, 1);
-            continue;
-        }
-        if (block.solid && block != entity)
-        {
-            if (collides)
+            if (checkPlayerCollisions(block))
             {
-                if (block.type == "question/block-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && block.state != "used") {
-                    block.state="used";
-                    if (block.prop != "")
-                        WORLD_DATA.push(new WorldObject(block.prop, block.x, block.y - 1, {
-                            "solid":false
-                        }))
-                    Player.score += 200;
-                    Player.coins += 1;
-                    hop(block);
-                }
-                if (block.type == "brick/float-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && !(block.jumped)) {
-                    hop(block);
-                }
-                if (block.type.includes("pipe/up") && block.prop != "" && Controls.down)
-                {
-                    loadWorld(block.prop, "spawn/" + currentWorld)
-                }
-                if (block.type.includes("pipe/left") && block.prop != "" && Controls.right)
-                {
-                    loadWorld(block.prop, "spawn/" + currentWorld)
-                }
-                if (block.type == "entity/goomba-1")
-                {
-                    if (entity.yVel > 0.02) {
-                        var b = block;
-                        setTimeout(() => {
-                            deleteFromWorld(b)
-                        }, 200);
-                    
-                        block.speed = 0;
-                        block.state = "squash";
-                        block.solid = false;
-                        block.y += 0.75;
-
-                        Player.score += 100;
-
-                        if (Controls.up) {
-                            entity.yVel = -BOUNCE_FORCE * 2;
-                            entity.jumped = true
-                        }
-                        else
-                            entity.yVel = -BOUNCE_FORCE;
-                        entity.y += entity.yVel;
-                    }
-                    else
-                    {
-                        entity.die();
-                    }
-                }
-                else
-                    collision = false;
+                collision = false;
             }
         }
     }
