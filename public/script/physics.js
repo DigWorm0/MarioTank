@@ -1,5 +1,3 @@
-const e = require("express");
-
 /*
         Motion
 */
@@ -52,6 +50,12 @@ function verifyMovement(entity)
             var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
             if (collides)
             {
+                if (block.type.includes("coin/coin"))
+                {
+                    Player.coins++;
+                    WORLD_DATA.splice(i, 1);
+                    continue;
+                }
                 if (block.type == "question/block-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && block.state != "used") {
                     block.state="used";
                     if (block.prop != "")
@@ -65,7 +69,8 @@ function verifyMovement(entity)
                 if (block.type == "brick/float-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && !(block.jumped)) {
                     hop(block);
                 }
-                if (block.type == "entity/goomba-1") {
+                if (block.type == "entity/goomba-1")
+                {
                     if (entity.yVel > 0.02) {
                         var index = i;
                         setTimeout(() => {

@@ -8,6 +8,7 @@ const CAMERA_DAMPING = 0.85;
 const CELL_SIZE = 16;
 const CELL_HEIGHT = 15;
 const CELL_WIDTH = 28;
+const SHOW_FPS = true;
 
 // Physics
 const X_MOTION_DAMPING = .9;
