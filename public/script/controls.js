@@ -169,6 +169,8 @@ function downloadMap()
 {
     var json = {};
     json.backgroundColor = backgroundColor;
+    json.displayName = displayName;
+    json.autoScroll = autoScroll;
     json.blocks = [];
     for (var i = 0; i < WORLD_DATA.length; i++)
     {
@@ -213,6 +215,8 @@ function changeWorld()
 function editWorld()
 {
     backgroundColor = document.getElementById("backgroundColor").value;
+    displayName = document.getElementById("displayName").value;
+    autoScroll = document.getElementById("autoScroll").checked;
 }
 
 function download(filename, text) {

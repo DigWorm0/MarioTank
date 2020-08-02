@@ -3,7 +3,9 @@
 */
 var WORLD_DATA = [];
 var backgroundColor = "black";
+var displayName = "";
 var currentWorld = DEFAULT_WORLD;
+var autoScroll = true;
 
 /*
         Class
@@ -68,7 +70,11 @@ function loadWorld(world)
             WORLD_DATA.push(new WorldObject(element.type, element.x, element.y, element.properties));
         });
         backgroundColor = data.backgroundColor;
+        displayName = data.displayName;
+        autoScroll = data.autoScroll;
         document.getElementById("backgroundColor").value = backgroundColor;
+        document.getElementById("displayName").value = displayName;
+        document.getElementById("autoScroll").checked = autoScroll;
         document.getElementById("worldTitle").innerText = currentWorld;
         WORLD_DATA.push(Player);
     }).fail(function(d) {
