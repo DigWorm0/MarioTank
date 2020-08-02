@@ -32,9 +32,6 @@ function render()
         Initialization
 */
 function beginGame() {
-    // Initialize World
-    loadWorld(currentWorld);
-
     // Initialize Player
     Player = new WorldObject("entity/player-1", 3, 9, {
         onground: false,
@@ -50,6 +47,10 @@ function beginGame() {
         "jump":1,
         "walk":3
     }, true);
+
+    // Initialize World
+    loadWorld(currentWorld, "spawn/1");
+
 
     // Initialize Other Modules
     beginControls();

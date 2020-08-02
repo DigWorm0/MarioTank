@@ -69,6 +69,10 @@ function verifyMovement(entity)
                 if (block.type == "brick/float-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && !(block.jumped)) {
                     hop(block);
                 }
+                if (block.type.includes("pipe/") && block.prop != "" && Controls.down)
+                {
+                    loadWorld(block.prop, "spawn/1")
+                }
                 if (block.type == "entity/goomba-1")
                 {
                     if (entity.yVel > 0.02) {

@@ -58,13 +58,18 @@ function loadSprite(url)
     sprite.src = url;
     return sprite;
 }
-function loadWorld(world)
+function loadWorld(world, spawn)
 {
     var start = new Date().getMilliseconds();
     currentWorld = world;
     WORLD_DATA = [];
     $.getJSON('/worldData/' + world + '.json', function(data) {
         data.blocks.forEach(element => {
+            if (element.type == spawn)
+            {
+                Player.x = element.x;
+                Player.y = element.y;
+            }
             WORLD_DATA.push(new WorldObject(element.type, element.x, element.y, element.properties));
         });
         backgroundColor = data.backgroundColor;
