@@ -45,17 +45,17 @@ function verifyMovement(entity)
     var collision = true;
     for (var i = 0; i < WORLD_DATA.length; i++) {
         const block = WORLD_DATA[i];
+        var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
+        if (block.type.includes("coin/coin-") && block.type != "coin/coin-anim-1" && collides)
+        {
+            Player.coins++;
+            WORLD_DATA.splice(i, 1);
+            continue;
+        }
         if (block.solid && block != entity)
         {
-            var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
             if (collides)
             {
-                if (block.type.includes("coin/coin"))
-                {
-                    Player.coins++;
-                    WORLD_DATA.splice(i, 1);
-                    continue;
-                }
                 if (block.type == "question/block-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && block.state != "used") {
                     block.state="used";
                     if (block.prop != "")
@@ -69,16 +69,20 @@ function verifyMovement(entity)
                 if (block.type == "brick/float-1" && (entity.x + entity.width - 0.1) > block.x && (entity.x + 0.1) < block.x + block.width && entity.yVel < 0 && !(block.jumped)) {
                     hop(block);
                 }
-                if (block.type.includes("pipe/") && block.prop != "" && Controls.down)
+                if (block.type.includes("pipe/up") && block.prop != "" && Controls.down)
                 {
-                    loadWorld(block.prop, "spawn/1")
+                    loadWorld(block.prop, "spawn/" + currentWorld)
+                }
+                if (block.type.includes("pipe/left") && block.prop != "" && Controls.right)
+                {
+                    loadWorld(block.prop, "spawn/" + currentWorld)
                 }
                 if (block.type == "entity/goomba-1")
                 {
                     if (entity.yVel > 0.02) {
-                        var index = i;
+                        var b = block;
                         setTimeout(() => {
-                            WORLD_DATA.splice(index, 1)
+                            deleteFromWorld(b)
                         }, 200);
                     
                         block.speed = 0;
@@ -94,6 +98,7 @@ function verifyMovement(entity)
                         }
                         else
                             entity.yVel = -BOUNCE_FORCE;
+                        entity.y += entity.yVel;
                     }
                     else
                     {
@@ -122,7 +127,7 @@ function updateWorld(world)
     world.forEach((block, index) => {
         if (block.type in DefaultAI)
         {
-            DefaultAI[block.type](block, index);
+            DefaultAI[block.type](block);
         }
     });
 }

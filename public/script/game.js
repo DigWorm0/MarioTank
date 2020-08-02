@@ -40,7 +40,8 @@ function beginGame() {
         animSpeed: 0.2,
         width:0.8,
         score: 0,
-        coins: 0
+        coins: 0,
+        x:50
     });
     Player.loadAnimations({
         "default":1,
@@ -49,7 +50,7 @@ function beginGame() {
     }, true);
 
     // Initialize World
-    loadWorld(currentWorld, "spawn/1");
+    loadWorld(currentWorld, "spawn/default");
 
 
     // Initialize Other Modules

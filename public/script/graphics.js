@@ -19,7 +19,8 @@ var cameraX = 0;
 var cameraY = 0;
 
 // GUI
-var coinAnim = new WorldObject("gui/coin-1", 0,0,{});
+var coinAnim = new WorldObject("gui/coin-1", 0,0,-1,{});
+var time = 400;
 
 /*
         Loop Timing
@@ -140,7 +141,7 @@ function drawScores()
     drawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
     drawText(currentWorld, 158 + cameraX, 30, "8px PressStart2P", "white");
     drawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
-    drawText("345", 225 + cameraX, 30, "8px PressStart2P", "white");
+    drawText(pad(time, 3), 225 + cameraX, 30, "8px PressStart2P", "white");
 
     bounceAnimation(coinAnim);
     drawSprite(coinAnim.sprite, 90 + cameraX, 21)
@@ -185,6 +186,9 @@ function beginDraw() {
     setInterval(function() {
         slowFps = fps;
     }, 50);
+    setInterval(function() {
+        time--;
+    }, 1000);
     coinAnim.loadAnimations({
         "default":5
     }, false);

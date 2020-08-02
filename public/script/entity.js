@@ -3,7 +3,7 @@
 */
 
 var DefaultAI = {
-    "entity/player-1":(entity, index) => {
+    "entity/player-1":(entity) => {
         if (!(entity.init))
         {
             entity.init = true;
@@ -17,16 +17,17 @@ var DefaultAI = {
         entity.animFlip = Math.abs(entity.xVel) > 0.01 ? entity.xVel < 0 : entity.animFlip;
         runAnimation(entity);
     },
-    "entity/goomba-1":(entity, index) => {
+    "entity/goomba-1":(entity) => {
         if (!(entity.init))
         {
             entity.init = true;
-            entity.flip = (index) => {
+            entity.flip = () => {
                 entity.state = "flip";
                 entity.speed = 0;
-                var i = index;
+                var i = entity.index;
+                console.log(i);
                 setTimeout(() => {
-                    WORLD_DATA.splice(i, 1)
+                    deleteFromWorld(entity)
                 }, 200);
             };
             entity.loadAnimations({
@@ -38,17 +39,32 @@ var DefaultAI = {
         bounce(entity);
         runAnimation(entity);
     },
-    "question/block-1":(entity, index) => {
+    "question/block-1":(entity) => {
         if (!(entity.init))
         {
             entity.init = true;
             entity.animSpeed = 0.1;
             entity.loadAnimations({
-                "default":3,
+                "default":4,
                 "used":1
             }, false);
         }
         bounceAnimation(entity);
+    },
+    "coin/coin-anim-1":(entity) => {
+        if (!(entity.init))
+        {
+            entity.init = true;
+            entity.loadAnimations({
+                "default":4
+            }, false);
+            entity.animSpeed = 0.2;
+            setTimeout(() => {
+                deleteFromWorld(entity)
+            }, 500);
+        }
+        entity.y -= 0.1;
+        runAnimation(entity);
     }
 }
 
@@ -111,15 +127,12 @@ function hop(entity)
         entity.jumped = false;
     }, 100);
 
-    for (var i = 0; i < WORLD_DATA.length; i++) {
-        const block = WORLD_DATA[i];
-        if (block.solid && block != entity)
+    var e = checkPoint(entity.x + entity.width / 2, entity.y - entity.height / 2, entity);
+    if (e)
+    {
+        if ("flip" in e)
         {
-            var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
-            if (collides && "flip" in block)
-            {
-                block.flip(i);
-            }
+            e.flip();
         }
     }
 }
@@ -132,22 +145,25 @@ function bounce(entity)
         entity.initBounce = true;
         entity.animSpeed = 0.1;
     }
-    var collisions = 0;
-    for (var i = 0; i < WORLD_DATA.length; i++) {
-        const block = WORLD_DATA[i];
-        if (block.solid && block != entity)
-        {
-            var collides = checkCollisions(entity.x, entity.y, entity.width, entity.height, block.x, block.y, block.width, block.height)
-            if (collides)
-            {
-                collisions++;
-            }
-        }
-    }
-    if (collisions != 1)
-        entity.direction = !entity.direction;
     if (entity.direction)
         entity.x += entity.speed;
     else
         entity.x -= entity.speed;
+    var x = entity.direction ? entity.width + entity.x - 0.1 : entity.x + 0.1;
+    if (checkPoint(x, entity.y + entity.height / 2, entity) || !checkPoint(entity.x + entity.width / 2, entity.y + entity.height, entity))
+        entity.direction = !entity.direction;
+}
+function checkPoint(x, y, entity)
+{
+    for (var i = 0; i < WORLD_DATA.length; i++) {
+        const block = WORLD_DATA[i];
+        if (block.solid && block != entity)
+        {
+            if (checkCollisions(x, y, 0, 0, block.x, block.y, block.width, block.height))
+            {
+                return block;
+            }
+        }
+    }
+    return false;
 }

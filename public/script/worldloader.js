@@ -77,3 +77,13 @@ function loadWorld(world, spawn)
     });
     console.log("Loaded " + world + " in " + (new Date().getMilliseconds() - start) + "ms");
 }
+function deleteFromWorld(block)
+{
+    for(var i = 0; i < WORLD_DATA.length; i++)
+    {
+        if (WORLD_DATA[i] == block)
+        {
+            WORLD_DATA.splice(i, 1);
+        }
+    }
+}
