@@ -35,7 +35,7 @@ function update()
         else
             Player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
 
-        if (time <= 0)
+        if ((time <= 0 || Player.y >= 15) && "die" in Player)
             Player.die();
     }
     if (!Player.freezeGrav) {
@@ -79,13 +79,19 @@ function beginGame() {
         blackScreen:true,
         jumping: false,
         freeze:false,
-        freezeGrav: false
+        freezeGrav: false,
+        noRepeat:true,
+        power:""
     });
     Player.loadAnimations({
         "default":1,
         "jump":1,
         "walk":3,
-        "climb":1
+        "climb":1,
+        "tall_default":1,
+        "tall_jump":1,
+        "tall_walk":3,
+        "tall_climb":1
     }, true);
 
     setTimeout(function() {
@@ -108,13 +114,22 @@ function restartGame()
         score: 0,
         coins: 0,
         x:50,
-        blackScreen:true
+        blackScreen:true,
+        jumping: false,
+        freeze:false,
+        freezeGrav: false,
+        noRepeat:true,
+        power:""
     });
     Player.loadAnimations({
         "default":1,
         "jump":1,
         "walk":3,
-        "climb":1
+        "climb":1,
+        "tall_default":1,
+        "tall_jump":1,
+        "tall_walk":3,
+        "tall_climb":1
     }, true);
 
     time = 400;

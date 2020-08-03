@@ -18,6 +18,9 @@ var DefaultAI = {
         {
             entity.state = (Math.abs(entity.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
             entity.state = entity.jumped ? "jump" : entity.state;
+            if (entity.power != "" && entity.power != undefined)
+                entity.state = entity.power + "_" + entity.state;
+            console.log(entity.state)
             entity.animFlip = Math.abs(entity.xVel) > 0.01 ? entity.xVel < 0 : entity.animFlip;         
         }
         runAnimation(entity);
@@ -30,7 +33,10 @@ var DefaultAI = {
             entity.freeze = true;
             entity.freezeGrav = true;
             entity.x = 198.5;
-            entity.state = "climb";
+            if (entity.power != "" && entity.power != undefined)
+                entity.state = entity.power + "_climb";
+            else
+                entity.state = "climb"
             setTimeout(function() {
                 entity.flagA = true;
             }, 400)
