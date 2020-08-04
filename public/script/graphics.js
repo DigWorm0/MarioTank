@@ -17,6 +17,7 @@ var slowFps = 0;
 var backgroundColor = DEFAULT_BACKGROUND_COLOR;
 var cameraX = 0;
 var cameraY = 0;
+var blackScreen = false;
 
 // GUI
 var coinAnim = new WorldObject("gui/coin-1", 0,0,-1,{});
@@ -77,25 +78,22 @@ function drawSprite(sprite, x, y)
     try {
         ctx.drawImage(sprite, x - cameraX, y - cameraY)
     }
-    catch
-    {
-
-    }
+    catch {}
 }
 function drawSpriteBySize(sprite, x, y, width, height)
 {
     try {
         ctx.drawImage(sprite, x - cameraX, y - cameraY, width, height)
     }
-    catch
-    {
-
-    }
+    catch {}
 }
 
 function clearDraw()
 {
-    drawRect(cameraX, cameraY, canvas.width + cameraX, canvas.height + cameraY, backgroundColor);
+    if (blackScreen)
+        drawRect(cameraX, cameraY, canvas.width + cameraX, canvas.height + cameraY, "black");
+    else
+        drawRect(cameraX, cameraY, canvas.width + cameraX, canvas.height + cameraY, backgroundColor);
 }
 
 /*
@@ -120,42 +118,49 @@ function drawBlocks(block)
 }
 function drawWorld(world)
 {
-    world.forEach(block => {
-        if (block.noRepeat)
-            drawBlock(block, block.x, block.y);
-        else
-            drawBlocks(block);
-        block.frame(block);
-    });
+    if (!blackScreen)
+    {
+        world.forEach(block => {
+            if (block.noRepeat)
+                drawBlock(block, block.x, block.y);
+            else
+                drawBlocks(block);
+            block.frame(block);
+        });
+    }
 }
 
 /*
-        Text Drawing
+        GUI Drawing
 */
 
 function drawScores()
 {
+    // Score
     drawText("MARIO", 10 + cameraX, 20, "8px PressStart2P", "white");
     drawText(pad(Player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");
+    // Coins
     drawText("x" + pad(Player.coins, 2), 100 + cameraX, 30, "8px PressStart2P", "white");
+    bounceAnimation(coinAnim);
+    drawSprite(coinAnim.sprite, 90 + cameraX, 21);
+    // World
     drawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
     drawText(displayName, 158 + cameraX, 30, "8px PressStart2P", "white");
+    // Time
     drawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
     drawText(pad(time, 3), 225 + cameraX, 30, "8px PressStart2P", "white");
 
-    bounceAnimation(coinAnim);
-    drawSprite(coinAnim.sprite, 90 + cameraX, 21)
-    if (SHOW_FPS) {
+    // FPS
+    if (DEBUG) {
         drawText("FPS", 290 + cameraX, 20, "8px PressStart2P", "white");
         drawText(Math.floor(slowFps), 294 + cameraX, 30, "8px PressStart2P", "white");
     }
-    if (Player.blackScreen)
+    if (blackScreen)
     {
         drawText("WORLD " + displayName, 170 + cameraX, 100, "8px PressStart2P", "white");
     }
 }
-
-function pad(num, size) {
+function pad(num, size) { // Ex: (123, 6) >>> "000123"
     var s = num+"";
     while (s.length < size) s = "0" + s;
     return s;
@@ -187,16 +192,23 @@ function autoscroll(x, range)
 function beginDraw() {
     ctx.imageSmoothingEnabled = false;
 
+    // Slow FPS
     setInterval(function() {
         slowFps = fps;
     }, 50);
+
+    // Timer
     setInterval(function() {
-        time--;
+        if (!freezePhysics)
+            time--;
     }, 1000);
+
+    // Coin Animations
     coinAnim.loadAnimations({
         "default":5
     }, false);
     coinAnim.animSpeed = 0.15;
 
+    // Loop
     requestAnimationFrame(frame);
 }

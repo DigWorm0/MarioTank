@@ -14,13 +14,12 @@ var DefaultAI = {
             }
         }
 
-        if (!entity.freeze)
+        if (!freezePhysics)
         {
             entity.state = (Math.abs(entity.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
             entity.state = entity.jumped ? "jump" : entity.state;
             if (entity.power != "" && entity.power != undefined)
                 entity.state = entity.power + "_" + entity.state;
-            console.log(entity.state)
             entity.animFlip = Math.abs(entity.xVel) > 0.01 ? entity.xVel < 0 : entity.animFlip;         
         }
         runAnimation(entity);
@@ -28,10 +27,10 @@ var DefaultAI = {
         /*
                 Flag Animation
         */
-        if (entity.x >= 198.5 && !entity.freeze)
+        if (entity.x >= 198.5 && !freezePhysics && !Player.flagA)
         {
-            entity.freeze = true;
-            entity.freezeGrav = true;
+            freeze();
+            freezeControls = true;
             entity.x = 198.5;
             if (entity.power != "" && entity.power != undefined)
                 entity.state = entity.power + "_climb";
@@ -43,24 +42,26 @@ var DefaultAI = {
         }
         if (entity.flagA)
         {
-            if (entity.y <= 12)
+            if (entity.y + entity.height <= 12.8)
             {
                 entity.y += 0.1;
             }
-            else
+            else if (!(entity.flagAB))
             {
                 setTimeout(function() {
                     entity.flagB = true;
-                    entity.freezeGrav = false;
+                    unfreeze();
                     entity.state = "walk";
-                }, 400)
+                }, 400);
+                entity.flagAB = true;
             }
         }
         if (entity.flagB)
         {
             if (entity.x <= 205)
             {
-                entity.x += 0.07;
+                entity.xVel += 0.0075;
+                entity.yVel += GRAVITY;
             }
             else if (Player)
             {
@@ -79,8 +80,6 @@ var DefaultAI = {
             entity.flip = () => {
                 entity.state = "flip";
                 entity.speed = 0;
-                var i = entity.index;
-                console.log(i);
                 setTimeout(() => {
                     deleteFromWorld(entity)
                 }, 200);
@@ -119,6 +118,17 @@ var DefaultAI = {
             }, 500);
         }
         entity.y -= 0.1;
+        runAnimation(entity);
+    },
+    "power/shroom-1":(entity) => {
+        if (!(entity.init))
+        {
+            entity.init = true;
+            entity.flip = () => {
+                // TODO
+            };
+        }
+        bounce(entity);
         runAnimation(entity);
     }
 }
