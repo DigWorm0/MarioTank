@@ -37,16 +37,6 @@ function checkPlayerCollisions(block)
         hop(block);
         return true;
     }
-    else if (block.type.includes("pipe/up") && block.prop != "" && Controls.down)
-    {
-        loadWorld(block.prop, "spawn/" + currentWorld)
-        return true;
-    }
-    else if (block.type.includes("pipe/left") && block.prop != "" && Controls.right)
-    {
-        loadWorld(block.prop, "spawn/" + currentWorld)
-        return false;
-    }
     else if (block.type == "entity/goomba-1")
     {
         if (Player.yVel > 0.02) {

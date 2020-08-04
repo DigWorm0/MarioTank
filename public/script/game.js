@@ -85,7 +85,7 @@ function restartGame()
     time = 400;
     setTimeout(function() {
         // Initialize World
-        loadWorld(currentWorld, "spawn/default");
+        loadWorld(displayName, "spawn/default");
         unfreeze();
         freezeControls = false;
         blackScreen = false;

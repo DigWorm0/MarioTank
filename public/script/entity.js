@@ -125,11 +125,25 @@ var DefaultAI = {
         {
             entity.init = true;
             entity.flip = () => {
-                // TODO
+                // TODO Power up Hop
             };
         }
         bounce(entity);
         runAnimation(entity);
+    },
+    "pipe/left-1":(entity) => {
+        if (Controls.right && checkPoint(entity.x - 0.1, entity.y + (entity.height / 2), entity) == Player)
+        {
+             // TODO Pipe Animation
+             loadWorld(entity.prop, "spawn/" + currentWorld)
+        }
+    },
+    "pipe/up-1":(entity) => {
+        if (Controls.down && checkPoint(entity.x + (entity.width / 2), entity.y - 0.1, entity) == Player)
+        {
+             // TODO Pipe Animation
+             loadWorld(entity.prop, "spawn/" + currentWorld)
+        }
     }
 }
 
