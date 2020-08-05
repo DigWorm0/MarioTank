@@ -32,6 +32,13 @@ const CONTROL_KEY_CODES = {
     right: 39,
     sprint: 16
 };
+const GAMEPAD_CODES = {
+    up: 0,
+    down: 13,
+    left: 14,
+    right: 15,
+    sprint: 2
+}
 
 /*
         Setting Calculations

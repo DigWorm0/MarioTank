@@ -7,10 +7,24 @@ var DefaultAI = {
         if (!(entity.init))
         {
             entity.init = true;
-            entity.die = () => {
-                //window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-                WORLD_DATA = [];
-                restartGame();
+            entity.die = (force = false) => {
+                //window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ?autoplay=1"; // Nothing to see here ;D
+                if (Player.power != "" && !force)
+                {
+                    Player.power = "";
+                    Player.height /= 2;
+                    Player.invinsible = true;
+                    setTimeout(() => {
+                        Player.invinsible = false;
+                    }, 5000)
+                    // TODO De-Power Up Animation
+                }
+                else if (!Player.invinsible || force)
+                {
+                    WORLD_DATA = [];
+                    restartGame();
+                    // TODO Death Animation
+                }
             }
         }
 
@@ -129,6 +143,16 @@ var DefaultAI = {
             };
         }
         bounce(entity);
+    },
+    "power/fire-1":(entity) => {
+        if (!(entity.init))
+        {
+            entity.init = true;
+            entity.animSpeed = 0.1;
+            entity.loadAnimations({
+                "default":4
+            }, false);
+        }
         runAnimation(entity);
     },
     "pipe/left-1":(entity) => {
@@ -193,6 +217,19 @@ function bounceAnimation(entity)
     }
     entity.sprite = entity.animSprites[realAnimState][Math.floor(entity.animFrame)];
 }
+function addGravity(entity)
+{
+    if (!(entity.initGrav))
+    {
+        entity.initGrav = true;
+        entity.gravYVel = 0;
+    }
+    entity.gravYVel += GRAVITY;
+    if (checkPoint(entity.x + (entity.width / 4), entity.y + entity.height, entity, entity.width / 2))
+        entity.gravYVel = 0;
+    entity.y += entity.gravYVel;
+    entity.gravYVel *= 0.9;
+}
 
 /*
         Universal AI
@@ -219,7 +256,7 @@ function bounce(entity)
 {
     if (!(entity.initBounce))
     {
-        entity.direction = true;
+        entity.direction = false;
         entity.speed = 0.03;
         entity.initBounce = true;
         entity.animSpeed = 0.1;
@@ -229,16 +266,17 @@ function bounce(entity)
     else
         entity.x -= entity.speed;
     var x = entity.direction ? entity.width + entity.x - 0.1 : entity.x + 0.1;
-    if (checkPoint(x, entity.y + entity.height / 2, entity) || !checkPoint(entity.x + entity.width / 2, entity.y + entity.height, entity))
+    if (checkPoint(x, entity.y + entity.height / 2, entity))
         entity.direction = !entity.direction;
+    addGravity(entity)
 }
-function checkPoint(x, y, entity)
+function checkPoint(x, y, entity, width = 0, height = 0)
 {
     for (var i = 0; i < WORLD_DATA.length; i++) {
         const block = WORLD_DATA[i];
         if (block.solid && block != entity)
         {
-            if (checkCollisions(x, y, 0, 0, block.x, block.y, block.width, block.height))
+            if (checkCollisions(x, y, width, height, block.x, block.y, block.width, block.height))
             {
                 return block;
             }

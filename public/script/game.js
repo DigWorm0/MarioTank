@@ -10,6 +10,7 @@ var freezeControls = false;
 function update()
 {
     // Controls
+    pollGamepads()
     if (!freezeControls)
     {
         if (Controls.up && Player.onground && !Player.jumping)
@@ -40,7 +41,7 @@ function update()
 
     // Check if Player Fell through the World
     if ((time <= 0 || Player.y >= 15) && "die" in Player)
-        Player.die();
+        Player.die(true);
     addMotion(Player); // Add physics to the Player
     updateWorld(WORLD_DATA); // Add physics to the world
 }
@@ -58,6 +59,12 @@ function render()
         Initialization
 */
 function beginGame() {
+
+    if (typeof(Storage) === "undefined") {
+        alert("Local Storage is either unsupported or disabled by your browser. You game will not be saved!")
+        console.log("Local Storage Disabled")
+    }
+
     beginControls();
     beginDraw();
     freeze();
@@ -115,6 +122,10 @@ function initPlayer()
         "tall_default":1,
         "tall_jump":1,
         "tall_walk":3,
-        "tall_climb":1
+        "tall_climb":1,
+        "fire_default":1,
+        "fire_jump":1,
+        "fire_walk":3,
+        "fire_climb":1
     }, true);
 }

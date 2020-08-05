@@ -2,12 +2,20 @@
         Variables
 */
 var Controls = {};
+var GamepadControls = {};
+var KeyboardControls = {};
 
 /*
         Updates
 */
 function updateControls()
 {
+    // Combine Keyboard and Gamepad Controls
+    for (const control in KeyboardControls)
+    {
+        Controls[control] = KeyboardControls[control] || GamepadControls[control];
+    }
+
     // Defaults
     Controls.vertical = 0;
     Controls.horizontal = 0;
@@ -31,10 +39,10 @@ function beginControls()
     // Defaults
     for (const control in CONTROL_KEY_CODES)
     {
-        Controls[control] = false;
+        KeyboardControls[control] = false;
     }
-    Controls.horizontal = 0;
-    Controls.vertical = 0;
+    KeyboardControls.horizontal = 0;
+    KeyboardControls.vertical = 0;
 
     // Document Listeners
     document.addEventListener('keydown', function(event) {
@@ -42,7 +50,7 @@ function beginControls()
         {
             if (event.keyCode == CONTROL_KEY_CODES[control])
             {
-                Controls[control] = true;
+                KeyboardControls[control] = true;
                 updateControls();
                 return;
             }
@@ -53,10 +61,27 @@ function beginControls()
         {
             if (event.keyCode == CONTROL_KEY_CODES[control])
             {
-                Controls[control] = false;
+                 KeyboardControls[control] = false;
                 updateControls();
                 return;
             }
         }
     });
+}
+
+/*
+        Gamepad API
+*/
+function pollGamepads() {
+    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+    for (var i = 0; i < gamepads.length; i++) {
+        var gp = gamepads[i];
+        if (gp) {
+            for (const control in GAMEPAD_CODES)
+            {
+                GamepadControls[control] = gamepads[i].buttons[GAMEPAD_CODES[control]].pressed;
+            }
+        }
+    }
+    updateControls();
 }

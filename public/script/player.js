@@ -16,10 +16,20 @@ function checkPlayerCollisions(block)
         if (block.prop != "") {
             if (block.prop == "powerup")
             {
-                var prop = "power/shroom-1"
-                WORLD_DATA.push(new WorldObject(prop, block.x, block.y - 1, {
-                    "solid":false
-                }));
+                if (Player.power == "")
+                {
+                    var prop = "power/shroom-1"
+                    WORLD_DATA.push(new WorldObject(prop, block.x, block.y - 1, {
+                        "solid":false
+                    }));
+                }
+                else
+                {
+                    var prop = "power/fire-1"
+                    WORLD_DATA.push(new WorldObject(prop, block.x, block.y - 1, {
+                        "solid":false
+                    }));
+                }
             }
             else
             {
@@ -68,9 +78,25 @@ function checkPlayerCollisions(block)
     }
     else if (block.type == "power/shroom-1")
     {
-        Player.power = "tall";
-        Player.y -= 1;
-        Player.height = 2;
+        if (Player.power == "") {
+            Player.power = "tall";
+            Player.y -= 1;
+            Player.height = 2;
+        }
+        deleteFromWorld(block);
+        return false;
+    }
+    else if (block.type == "power/fire-1")
+    {
+        if (Player.power == "") {
+            Player.power = "fire";
+            Player.y -= 1;
+            Player.height = 2;
+        }
+        else if (Player.power == "tall")
+        {
+            Player.power = "fire";
+        }
         deleteFromWorld(block);
         return false;
     }
