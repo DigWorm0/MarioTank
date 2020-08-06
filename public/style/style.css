@@ -1,9 +1,15 @@
+@font-face {
+    font-family: "PressStart2P";
+    src: url(/style/font.ttf);
+}
+
 html, body {
     height: 100%;
     width: 100%;
     overflow: hidden;
     margin:0;
     background-color: black;
+    font-family: "PressStart2P";
 }
 
 canvas {
@@ -55,4 +61,37 @@ img {
     left: unset;
     right: 10px;
     height:150px;
+}
+
+.startForm {
+    color:white;
+    font-size: 20px;
+    text-align: center;
+    top: 35%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    position: absolute;
+}
+
+.startForm input {
+    min-width: 30%;
+    max-width:80%;
+    height: 40px;
+    font-size: 20px;
+    font-family: "PressStart2P";
+    text-align: center;
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+}
+.startForm h1 {
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+
+.bgImg {
+    width: 100%;
+    height: 100%;
+    filter: blur(10px) brightness(50%);
 }

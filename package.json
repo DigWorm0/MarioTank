@@ -1,8 +1,8 @@
 {
   "name": "mariotank",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Mario...but in a tank.",
-  "main": "index.js",
+  "main": "Server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
-    "jquery": "^3.5.1"
+    "jquery": "^3.5.1",
+    "socket.io": "^2.3.0"
   }
 }

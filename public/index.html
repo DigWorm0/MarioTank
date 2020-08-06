@@ -4,9 +4,10 @@
         <meta charset="UTF-8">
         <title>Marios Got a Tank</title>
         <link rel="stylesheet" type="text/css" href="/style/style.css" />
+        <script src="/socket.io/socket.io.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
-    <body onload="beginGame()">
+    <body onload="Start()">
         <div class="world-edit">
             <h2>Editor</h2>
             <b>Type:</b><input id="blockType" type="text" placeholder="type" onchange="editBlock()"/><br />
@@ -31,14 +32,15 @@
             <b>Autoscroll:</b><input id="autoScroll" type="checkbox" onchange="editWorld()"/><br />
         </div>
         <canvas id="canvas" width="448" height="240"></canvas>
-
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="/script/settings.js"></script>
-        <script src="/script/graphics.js"></script>
-        <script src="/script/worldloader.js"></script>
-        <script src="/script/entity.js"></script>
-        <script src="/script/controls.js"></script>
-        <script src="/script/physics.js"></script>
-        <script src="/script/game.js"></script>
+        <script src="/script/Settings.js"></script>
+        <script src="/script/WorldManager.js"></script>
+        <script src="/script/GraphicsManager.js"></script>
+        <script src="/script/BlockDefaults.js"></script>
+        <script src="/script/ControlManager.js"></script>
+        <script src="/script/Network.js"></script>
+        <script src="/script/PlayerManager.js"></script>
+        <script src="/script/PhysicsManager.js"></script>
+        <script src="/script/Main.js"></script>
     </body>
 </html>
