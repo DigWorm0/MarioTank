@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Marios Got a Tank</title>
+        <link rel="stylesheet" type="text/css" href="/style/style.css" />
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <img src="/tempBackground.jfif" class="bgImg" />
+        <form class="startForm">
+            <h1>Name:</h1>
+            <input type="text" name="name" />
+            <input type="hidden" name="room" id="roomid"/>
+        </form>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            document.getElementById('roomid').value=(new URLSearchParams(window.location.search)).get('room');
+        </script>
+    </body>
+</html>
