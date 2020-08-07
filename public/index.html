@@ -10,19 +10,19 @@
     <body onload="Start()">
         <div class="world-edit">
             <h2>Editor</h2>
-            <b>Type:</b><input id="blockType" type="text" placeholder="type" onchange="editBlock()"/><br />
-            <b>X:</b><input id="blockX" type="number" placeholder="X" onchange="editBlock()"/><br />
-            <b>Y:</b><input id="blockY" type="number" placeholder="Y" onchange="editBlock()"/><br />
-            <b>Height:</b><input id="blockH" type="number" placeholder="Height" onchange="editBlock()"/><br />
-            <b>Width:</b><input id="blockW" type="number" placeholder="Width" onchange="editBlock()"/><br />
-            <b>Prop:</b><input id="blockProp" type="text" placeholder="Prop" onchange="editBlock()"/><br />
-            <b>No Repeat:</b><input id="blockRepeat" type="checkbox" onchange="editBlock()"/><br />
-            <b>Solid:</b><input id="blockSolid" type="checkbox" onchange="editBlock()"/><br />
-            <button type="button" onclick="newBlock()">Add</button>
-            <button type="button" onclick="delBlock()">Delete</button>
-            <button type="button" onclick="downloadMap()">Download</button>
-            <button type="button" onclick="changeWorld()">Change</button><br />
-            <button type="button" onclick="dupBlock()">Duplicate</button><br />
+            <b>Type:</b><input id="blockType" type="text" placeholder="type" onchange="editBlock()" class="edit" /><br />
+            <b>X:</b><input id="blockX" type="number" placeholder="X" onchange="editBlock()" class="edit" /><br />
+            <b>Y:</b><input id="blockY" type="number" placeholder="Y" onchange="editBlock()" class="edit" /><br />
+            <b>Height:</b><input id="blockH" type="number" placeholder="Height" onchange="editBlock()" class="edit" /><br />
+            <b>Width:</b><input id="blockW" type="number" placeholder="Width" onchange="editBlock()" class="edit" /><br />
+            <b>Prop:</b><input id="blockProp" type="text" placeholder="Prop" onchange="editBlock()" class="edit" /><br />
+            <b>Repeat:</b><input id="blockRepeat" type="checkbox" onchange="editBlock()" class="edit" /><br />
+            <b>Solid:</b><input id="blockSolid" type="checkbox" onchange="editBlock()" class="edit" /><br />
+            <button type="button" onclick="newBlock()" class="edit" >Add</button>
+            <button type="button" onclick="delBlock()" class="edit" >Delete</button>
+            <button type="button" onclick="downloadMap()" class="edit" >Download</button>
+            <button type="button" onclick="changeWorld()" class="edit" >Change</button><br />
+            <button type="button" onclick="dupBlock()" class="edit" >Duplicate</button><br />
             <img src="/" width="300" height="200" id="blockImg" />
         </div>
         <div class="world-edit" id="world-data">
@@ -33,7 +33,7 @@
         </div>
         <canvas id="canvas" width="448" height="240"></canvas>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="/script/Settings.js"></script>
+        <script src="/script/settings.js"></script>
         <script src="/script/WorldManager.js"></script>
         <script src="/script/GraphicsManager.js"></script>
         <script src="/script/BlockDefaults.js"></script>

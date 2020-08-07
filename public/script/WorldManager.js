@@ -38,20 +38,27 @@ function LoadWorld(id)
 {
     var start = new Date().getMilliseconds();
     worldData = {};
+    worldProperties.world = id;
 
     $.getJSON('/worldData/' + id + '.json', function(data) {
         data.blocks.forEach(block => {
             var block = new Block(block.type, block.x, block.y, block.properties);
             worldData[block.id] = block;
         });
+        document.getElementById("backgroundColor").value = data.bgColor;
+        document.getElementById("displayName").value = data.displayName;
+        document.getElementById("autoScroll").checked = data.autoScroll;
+        document.getElementById("worldTitle").innerText = id;
         worldProperties.bgColor = data.bgColor;
         worldProperties.displayName = data.displayName;
         worldProperties.autoScroll = data.autoScroll;
         cameraX = 0;
+    }).fail(function(d) {
+        document.getElementById("worldTitle").innerText = id;
     });
 
     if (DEBUG)
-        console.log("Loaded " + world + " in " + (new Date().getMilliseconds() - start) + "ms");
+        console.log("Loaded world in " + (new Date().getMilliseconds() - start) + "ms");
 }
 
 /**
@@ -107,6 +114,9 @@ class Block
         this.prop = "";
         this.gravity = false;
         this.physics = false;
+        this.xVel = 0;
+        this.yVel = 0;
+        this.flip = false;
 
         /**
          * Initializes the Block

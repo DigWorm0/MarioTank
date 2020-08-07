@@ -185,6 +185,8 @@ class Player extends Block {
             player.state = player.power + "_" + player.state;
         player.flip = Math.abs(player.xVel) > 0.01 ? player.xVel < 0 : player.flip;   
     }
-}
-
+}  
 player = new Player(socket.id, 1,1);
+if (!(socket.id))
+    player.id = "main"
+players[player.id] = player;

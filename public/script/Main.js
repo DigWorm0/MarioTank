@@ -26,31 +26,9 @@ function Loop()
 function PhysicsLoop()
 {
     UpdateControls();
-    if (Controls.up && player.onground && !player.jumping)
-    {
-        player.jumped = true;
-        player.jumping = true;
-        player.yVel -= JUMP_FORCE;
 
-        setTimeout(function() {
-            player.jumping = false;
-        }, 100);
-    }
-    if (!Controls.up && player.jumping)
-    {
-        player.jumping = false;
-    }
-    if (player.jumping)
-    {
-        player.yVel -= CONTINUOUS_JUMP_FORCE
-    }
-    
-    if (player.onground && Controls.sprint)
-        player.xVel += Controls.horizontal * PLAYER_SPRINT_SPEED;
-    else if (player.onground)
-        player.xVel += Controls.horizontal * PLAYER_SPEED;
-    else
-        player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
+    player.xVel += Controls.horizontal * PLAYER_SPEED;
+    player.yVel += Controls.vertical * PLAYER_SPEED;
     
     ApplyWorldVectors(worldData);
     ApplyVectors(player, worldData);
@@ -61,9 +39,12 @@ function PhysicsLoop()
  */
 function GraphicsLoop()
 {
-    if (worldProperties.autoscroll)
-        ScrollTo(player.x);
+    if (worldProperties.autoScroll)
+        ScrollTo((player.x - CELL_WIDTH/2) * 16);
+    bgColor = worldProperties.bgColor;
     ClearDraw();
+    if (selectedBlock)
+        DrawRect(selectedBlock.x-1.05, selectedBlock.y-1.05, selectedBlock.width + 0.1, selectedBlock.height + 0.1, "red")
     DrawWorld(worldData);
     DrawPlayers(players);
     DrawGUI(player, worldProperties);
@@ -74,6 +55,7 @@ function GraphicsLoop()
  */
 function Start()
 {
+    LoadWorld("1-1")
     requestAnimationFrame(Loop);
 }
 

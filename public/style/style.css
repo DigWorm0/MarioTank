@@ -27,7 +27,7 @@ canvas {
     -ms-interpolation-mode: nearest-neighbor;
 }
 
-input {
+.edit input {
     float:right;
 }
 

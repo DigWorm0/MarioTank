@@ -5,12 +5,12 @@
  */
 function ApplyVectors(block, world)
 {
-    if (block.gravity)
-        block.yVel += GRAVITY;
+    //if (block.gravity)
+    //    block.yVel += GRAVITY;
     block.x += block.xVel;
-    CorrectMovement(block, world, "x");
+    //CorrectMovement(block, world, "x");
     block.y += block.yVel;
-    CorrectMovement(block, world, "y");
+    //CorrectMovement(block, world, "y");
     block.xVel *= 0.9;
     block.yVel *= 0.9;
 }

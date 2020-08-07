@@ -63,9 +63,20 @@ function DrawText(text, x, y, font="8px PressStart2P", color="white")
 function DrawSprite(sprite, x, y, width=1, height=1)
 {
     try {
+        if (width == 1 && height == 1)
+            ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY);
+        else
         ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY, width*16, height*16);
     }
-    catch {}
+    catch {
+        try {
+            ctx.drawImage(GetSprite("null"), x*16 - cameraX, y*16 - cameraY, width*16, height*16)
+        }
+        catch (e)
+        {
+            
+        }
+    }
 }
 
 /**
@@ -88,13 +99,25 @@ function GetSprite(type)
  * @param {Object} block - Block to draw
  * @param {number} [x=block.x] - X position
  * @param {number} [y=block.y] - Y position
+ * @param {boolean} [stretch=true] - Stretches the sprite across the width and height
  */
-function DrawBlock(block, x=block.x, y=block.y)
+function DrawBlock(block, x=block.x, y=block.y, stretch=true)
 {
-    if (block.useAnim)
-        DrawSprite(GetSprite(block.type + GetAnim(block)), x, y);
+    if (stretch)
+    {
+        if (block.useAnim)
+            DrawSprite(GetSprite(block.type + GetAnim(block)), x - 1, y - 1, block.width, block.height);
+        else
+            DrawSprite(GetSprite(block.type), x - 1, y - 1, block.width, block.height);
+    }
     else
-        DrawSprite(GetSprite(block.type), x, y);
+    {
+        if (block.useAnim)
+            DrawSprite(GetSprite(block.type + GetAnim(block)), x - 1, y - 1);
+        else
+            DrawSprite(GetSprite(block.type), x - 1, y - 1);
+    }
+    
 }
 
 /**
@@ -111,7 +134,7 @@ function DrawWorld(world)
             {
                 for(var y = 0; y < world[id].height; y++)
                 {
-                    DrawBlock(world[id], x, y);
+                    DrawBlock(world[id], x + world[id].x, y + world[id].y, false);
                 }
             }
         }
@@ -172,7 +195,7 @@ function Pad(num, size) {
  */
 function ClearDraw(backgroundColor=bgColor)
 {
-    DrawRect(cameraX, cameraY, canvas.width + cameraX, canvas.height + cameraY, backgroundColor);
+    DrawRect(cameraX / 16, cameraY / 16, CELL_WIDTH, CELL_HEIGHT, backgroundColor);
 }
 
 
@@ -185,6 +208,8 @@ function ScrollTo(x, y = 0)
 {
     cameraX = (x - cameraX) * CAMERA_DAMPING + cameraX;
     cameraY = (y - cameraY) * CAMERA_DAMPING + cameraY;
+    if (cameraX < 0)
+        cameraX = 0;
 }
 
 /**
@@ -222,4 +247,5 @@ function GetAnim(block)
     str += block.state + "-" + Math.floor(block.frame);
     if (block.flip)
         str += "_flip";
+    return str;
 }
