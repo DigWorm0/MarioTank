@@ -14,7 +14,7 @@ var bgColor = "black";
  * @param {number} height 
  * @param {string} color 
  */
-function DrawRect(x, y, width, height, color)
+function drawRect(x, y, width, height, color)
 {
     ctx.fillStyle = color;
     ctx.fillRect(x*16 - cameraX, y*16 - cameraY, width*16, height*16)
@@ -28,7 +28,7 @@ function DrawRect(x, y, width, height, color)
  * @param {number} y2 
  * @param {string} color 
  */
-function DrawLine(x1, y1, x2, y2, color)
+function drawLine(x1, y1, x2, y2, color)
 {
     ctx.strokeStyle = color;
     ctx.beginPath();
@@ -45,11 +45,11 @@ function DrawLine(x1, y1, x2, y2, color)
  * @param {string} [font="8px PressStart2P"]
  * @param {string} [color="white"]
  */
-function DrawText(text, x, y, font="8px PressStart2P", color="white")
+function drawText(text, x, y, font="8px PressStart2P", color="white")
 {
     ctx.fillStyle = color;
     ctx.font = font;
-    ctx.fillText(text, x*16 - cameraX, y*16 - cameraY);
+    ctx.fillText(text, x - cameraX, y - cameraY);
 }
 
 /**
@@ -60,10 +60,13 @@ function DrawText(text, x, y, font="8px PressStart2P", color="white")
  * @param {number} [width=1]
  * @param {number} [height=1]
  */
-function DrawSprite(sprite, x, y, width=1, height=1)
+function drawSprite(sprite, x, y, width=1, height=1)
 {
     try {
-        ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY, width*16, height*16);
+        if (width == 1 && height == 1)
+            ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY);
+        else
+            ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY, width*16, height*16);
     }
     catch {}
 }
@@ -72,7 +75,7 @@ function DrawSprite(sprite, x, y, width=1, height=1)
  * Gets the sprite of the given type
  * @param {string} type - Object type
  */
-function GetSprite(type)
+function getSprite(type)
 {
     if (!(sprites[type]))
     {
@@ -88,45 +91,61 @@ function GetSprite(type)
  * @param {Object} block - Block to draw
  * @param {number} [x=block.x] - X position
  * @param {number} [y=block.y] - Y position
+ * @param {boolean} [stretch=true] - Stretches the sprite across the width and height
  */
-function DrawBlock(block, x=block.x, y=block.y)
+function drawBlock(block, x=block.x, y=block.y, stretch=true)
 {
-    if (block.useAnim)
-        DrawSprite(GetSprite(block.type + GetAnim(block)), x, y);
+    var trueY = block.hop ? y - (1/8) : y;
+    if (stretch)
+    {
+        if (block.useAnim)
+            drawSprite(getSprite(block.type + getAnim(block)), x - 1, trueY - 1, block.width, block.height);
+        else
+            drawSprite(getSprite(block.type), x - 1, trueY - 1, block.width, block.height);
+    }
     else
-        DrawSprite(GetSprite(block.type), x, y);
+    {
+        if (block.useAnim)
+            drawSprite(getSprite(block.type + getAnim(block)), x - 1, trueY - 1);
+        else
+            drawSprite(getSprite(block.type), x - 1, trueY - 1);
+    }
 }
 
 /**
  * Draws all the blocks in a world
  * @param {Object} world - World Data
  */
-function DrawWorld(world)
+function drawWorld(world)
 {
-    for (id in world)
+    for (id in world.blocks)
     {
-        if (world[id].repeat)
+        if (world.blocks[id].repeat)
         {
-            for(var x = 0; x < world[id].width; x++)
+            for(var x = 0; x < world.blocks[id].width; x++)
             {
-                for(var y = 0; y < world[id].height; y++)
+                for(var y = 0; y < world.blocks[id].height; y++)
                 {
-                    DrawBlock(world[id], x, y);
+                    drawBlock(world.blocks[id], x + world.blocks[id].x, y + world.blocks[id].y, false);
                 }
             }
         }
         else
         {
-            DrawBlock(world[id]);
+            drawBlock(world.blocks[id]);
         }
     }
 }
 
-function DrawPlayers(players)
+/**
+ * Draws all the players
+ * @param {Object[]} players - Players to draw
+ */
+function drawPlayers(players)
 {
     for (var id in players)
     {
-        DrawBlock(players[id]);
+        drawBlock(players[id], players[id].x, players[id].y, false);
     }
 }
 
@@ -135,21 +154,21 @@ function DrawPlayers(players)
  * @param {Object} player - The Player
  * @param {Object} worldProperties - The World Properties
  */
-function DrawGUI(player, worldProperties)
+function drawGUI(player, world)
 {
     // Score
-    DrawText(player.name, 10 + cameraX, 20, "8px PressStart2P", "white");
-    DrawText(Pad(player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");
+    drawText(player.name, 10 + cameraX, 20, "8px PressStart2P", "white");
+    drawText(pad(player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");
     // Coins
-    DrawText("x" + Pad(player.coins, 2), 100 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("x" + pad(player.coins, 2), 100 + cameraX, 30, "8px PressStart2P", "white");
     //BounceAnimation(coinAnim);
-    DrawSprite(coinAnim.sprite, 90 + cameraX, 21);
+    drawSprite(coinAnim.sprite, 90 + cameraX, 21);
     // World
-    DrawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
-    DrawText(worldProperties.displayName, 158 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
+    drawText(world.displayName, 158 + cameraX, 30, "8px PressStart2P", "white");
     // Time
-    DrawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
-    DrawText(Pad(worldProperties.time, 3), 225 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
+    drawText(pad(world.time, 3), 225 + cameraX, 30, "8px PressStart2P", "white");
 }
 
 /**
@@ -159,7 +178,7 @@ function DrawGUI(player, worldProperties)
  * @returns {string} - Number represented as a string with 0s as a pad
  * @private
  */
-function Pad(num, size) {
+function pad(num, size) {
     var s = num + "";
     while (s.length < size)
         s = "0" + s;
@@ -170,9 +189,9 @@ function Pad(num, size) {
  * Clears the current canvas with bgColor
  * @param {string} [backgroundColor=bgColor] - Background Color
  */
-function ClearDraw(backgroundColor=bgColor)
+function clearDraw(backgroundColor=bgColor)
 {
-    DrawRect(cameraX, cameraY, canvas.width + cameraX, canvas.height + cameraY, backgroundColor);
+    drawRect(cameraX / 16, cameraY / 16, CELL_WIDTH, CELL_HEIGHT, backgroundColor);
 }
 
 
@@ -181,10 +200,12 @@ function ClearDraw(backgroundColor=bgColor)
  * @param {number} x - Camera X Position
  * @param {number} y - Camera Y Position
  */
-function ScrollTo(x, y = 0)
+function scrollTo(x, y = 0)
 {
-    cameraX = (x - cameraX) * CAMERA_DAMPING + cameraX;
-    cameraY = (y - cameraY) * CAMERA_DAMPING + cameraY;
+    cameraX = Math.round((x - cameraX) * CAMERA_DAMPING + cameraX);
+    cameraY = Math.round((y - cameraY) * CAMERA_DAMPING + cameraY);
+    if (cameraX < 0)
+        cameraX = 0;
 }
 
 /**
@@ -193,7 +214,7 @@ function ScrollTo(x, y = 0)
  * @param {Object} animations - Block Animations
  * @param {number} speed - Speed of the Animation
  */
-function InitAnim(block, animations, speed=0.15)
+function initAnim(block, animations, speed=0.15)
 {
     block.useAnim = true;
     block.animations = animations;
@@ -208,7 +229,7 @@ function InitAnim(block, animations, speed=0.15)
  * Gets the directory of the current animation frame
  * @param {Object} block - Block to animate
  */
-function GetAnim(block)
+function getAnim(block)
 {
     if (!(block.state in block.animations))
         return "";
@@ -222,4 +243,5 @@ function GetAnim(block)
     str += block.state + "-" + Math.floor(block.frame);
     if (block.flip)
         str += "_flip";
+    return str;
 }

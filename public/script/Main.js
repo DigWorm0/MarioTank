@@ -1,86 +1,93 @@
-var last = GetTimestamp();
+var last = _getTimestamp();
 var dt = 0;
 var lastLoop = new Date();
+var blackDisplay = false;
+var timerInterval = -1;
+var waitForWorld = true;
 
 /**
  * Manages the speed of GraphicsLoop and PhysicsLoop
  * @private
  */
-function Loop()
+function _loop()
 {
-    var now = GetTimestamp();
+    var now = _getTimestamp();
     dt = dt + Math.min(1, (now - last) / 1000);
     while(dt > STEP) {
         dt = dt - STEP;
-        PhysicsLoop();
+        physicsLoop();
     }
-    GraphicsLoop();
+    graphicsLoop();
     last = now;
 
-    requestAnimationFrame(Loop);
+    requestAnimationFrame(_loop);
 }
 
 /**
  * Runs physics updates
  */
-function PhysicsLoop()
+function physicsLoop()
 {
-    UpdateControls();
-    if (Controls.up && player.onground && !player.jumping)
-    {
-        player.jumped = true;
-        player.jumping = true;
-        player.yVel -= JUMP_FORCE;
-
-        setTimeout(function() {
-            player.jumping = false;
-        }, 100);
-    }
-    if (!Controls.up && player.jumping)
-    {
-        player.jumping = false;
-    }
-    if (player.jumping)
-    {
-        player.yVel -= CONTINUOUS_JUMP_FORCE
-    }
-    
-    if (player.onground && Controls.sprint)
-        player.xVel += Controls.horizontal * PLAYER_SPRINT_SPEED;
-    else if (player.onground)
-        player.xVel += Controls.horizontal * PLAYER_SPEED;
-    else
-        player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
-    
-    ApplyWorldVectors(worldData);
-    ApplyVectors(player, worldData);
+    applyPlayerVectors(player, world);
 }
 
 /**
  * Runs graphic updates
  */
-function GraphicsLoop()
+function graphicsLoop()
 {
-    if (worldProperties.autoscroll)
-        ScrollTo(player.x);
-    ClearDraw();
-    DrawWorld(worldData);
-    DrawPlayers(players);
-    DrawGUI(player, worldProperties);
+    clearDraw();
+    if (!(player))
+        return;
+    if (!blackDisplay)
+    {
+        if (world.autoScroll && ((player.x - CELL_WIDTH/2) * 16) - cameraX > 50)
+            scrollTo(((player.x - CELL_WIDTH/2) * 16) - 50);
+        if (world.autoScroll && ((player.x - CELL_WIDTH/2) * 16) - cameraX < -50)
+            scrollTo(((player.x - CELL_WIDTH/2) * 16) + 50);
+        drawWorld(world);
+        drawPlayers(players);
+    }
+    else
+    {
+        drawText("WORLD " + world.displayName, 170, 100)
+    }
+    drawGUI(player, world);
 }
 
 /**
  * Runs at startup
  */
-function Start()
+function start()
 {
-    requestAnimationFrame(Loop);
+    resetWorld();
+    requestAnimationFrame(_loop);
 }
 
 /**
  * @returns Current time in ms
  * @private
  */
-function GetTimestamp() {
+function _getTimestamp() {
     return window.performance && window.performance.now ? window.performance.now() : new Date().getTime();
+}
+
+/**
+ * Resets the World to Beginning
+ */
+function resetWorld()
+{
+    cameraX = 0;
+    world.time = 400;
+    bgColor = "black";
+    blackDisplay = true;
+    setTimeout(() => {
+        bgColor = world.bgColor;
+        blackDisplay = false;
+        if (timerInterval != -1)
+            clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            world.time--;
+        }, 1000)
+    }, 3000);
 }

@@ -6,17 +6,14 @@
         <link rel="stylesheet" type="text/css" href="/style/style.css" />
         <script src="/socket.io/socket.io.js"></script>
     </head>
-    <body onload="Start()">
+    <body onload="socket.emit('getWorld', DEFAULT_WORLD);">
         <canvas id="canvas" width="448" height="240"></canvas>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="/script/Settings.js"></script>
-        <script src="/script/WorldManager.js"></script>
         <script src="/script/GraphicsManager.js"></script>
-        <script src="/script/BlockDefaults.js"></script>
         <script src="/script/ControlManager.js"></script>
+        <script src="/script/PlayerPhysics.js"></script>
         <script src="/script/Network.js"></script>
-        <script src="/script/PlayerManager.js"></script>
-        <script src="/script/PhysicsManager.js"></script>
         <script src="/script/Main.js"></script>
     </body>
 </html>

@@ -1,4 +1,4 @@
-var Controls = {};
+var Controls = {vertical:0,horizontal:0};
 var GamepadControls = {};
 var KeyboardControls = {};
 var freezeControls = false;
@@ -56,8 +56,6 @@ document.addEventListener('keydown', function(event) {
         if (event.keyCode == CONTROL_KEY_CODES[control])
         {
             KeyboardControls[control] = true;
-            updateControls();
-            return;
         }
     }
 });
@@ -66,9 +64,7 @@ document.addEventListener('keyup', function(event) {
     {
         if (event.keyCode == CONTROL_KEY_CODES[control])
         {
-                KeyboardControls[control] = false;
-            updateControls();
-            return;
+            KeyboardControls[control] = false;
         }
     }
 });
