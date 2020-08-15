@@ -43,7 +43,7 @@ class World {
                 if (!error && response.statusCode === 200) {
                     data.blocks.forEach(block => {
                         var blockId = createID();
-                        world.blocks[blockId] = new Block(block.type, block.x, block.y, block.properties);
+                        world.blocks[blockId] = new Block(block.type, block.x, block.y, world.id, block.properties);
                         world.blocks[blockId].id = blockId;
                     });
 
@@ -69,7 +69,7 @@ class Block {
      * @param {number} y - Y position of the block
      * @param {Object} [properties={}] - Optional properties of the block 
      */
-    constructor(type, x, y, properties = {}) {
+    constructor(type, x, y, world, properties = {}) {
         this.type = type;
         this.x = x;
         this.y = y;
@@ -109,7 +109,7 @@ class Block {
          * @returns - True if collision is valid, false otherwise
          */
         this.collision = (block, collider) => {
-            return collider.solid;
+            return collider.isSolid;
         };
 
         // Properties
@@ -157,7 +157,7 @@ io.on('connection', socket => {
      */
     socket.on('addBlock', (world, type, x, y, properties) => {
         var blockId = createID();
-        worlds[world].blocks[blockId] = new Block(type, x, y, properties);
+        worlds[world].blocks[blockId] = new Block(type, x, y, world, properties);
         worlds[world].blocks[blockId].id = blockId;
         io.emit('addBlock', world, worlds[world].blocks[blockId])
     });
@@ -244,7 +244,7 @@ function loop() {
     for (var key in worlds)
     {
         var world = worlds[key];
-        phys.updateWorld(world);
+        phys.updateWorld(key, world);
     }
 }
 /* #endregion */

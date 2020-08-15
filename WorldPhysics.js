@@ -5,20 +5,41 @@
 module.exports.load = function(io)
 {
     this.io = io;
-    module.exports.blockInits = {};
-    module.exports.blockUpdates = {};
+    module.exports.blockInits = {
+        "coin/coin-anim-1":(entity) => {
+            _initAnim(entity, {
+                "default":4
+            }, 0.2);
+            setTimeout(() => {
+                delete worlds[entity.world].blocks[entity.id]
+            }, 500);
+        },
+        "question/block-1":(entity) => {
+            _initAnim(entity, {
+                "default":6,
+                "used":1
+            }, 0.12);
+        }
+    };
+    module.exports.blockUpdates = {
+        "coin/coin-anim-1":(entity) => {
+            entity.y -= 0.1;
+            this.io.emit("updateBlock", entity.world, entity.id, {"y":entity.y});
+        }
+    };
 
     /**
      * Applys vectors to all applicable blocks in a world
+     * @param {string} worldID - ID of the world
      * @param {Object} world - The world to apply vectors to
      */
-    module.exports.updateWorld = function(world)
+    module.exports.updateWorld = function(worldID, world)
     {
         for (id in world.blocks)
         {
             if ("update" in world.blocks[id])
             {
-                world.blocks[id].update(world.blocks[id], world);
+                world.blocks[id].update(world.blocks[id]);
             }
             if (world.blocks[id].physics) {
                 updateBlock(world.blocks[id], world);
@@ -56,7 +77,7 @@ function _correctYMovement(block, world)
 {
     for (var id in world.blocks)
     {
-        if (id != block.id && BoxCollider(block.x, block.y, block.width, block.height, world.blocks[id].x, world.blocks[id].y, world.blocks[id].width, world.blocks[id].height))
+        if (id != block.id && _boxCollider(block.x, block.y, block.width, block.height, world.blocks[id].x, world.blocks[id].y, world.blocks[id].width, world.blocks[id].height))
         {
             if (block.collision(block, world.blocks[id]))
             {
@@ -125,7 +146,7 @@ function _findCollision(x, y, block, world, width = 0, height = 0)
 {
     for (var key in world.blocks)
     {
-        if (world.blocks[key].solid && key != block.id && _boxCollider(x, y, width, height, world.blocks[key].x, world.blocks[key].y, world.blocks[key].width, world.blocks[key].height))
+        if (world.blocks[key].isSolid && key != block.id && _boxCollider(x, y, width, height, world.blocks[key].x, world.blocks[key].y, world.blocks[key].width, world.blocks[key].height))
         {
             return world.blocks[key];
         }
@@ -147,6 +168,24 @@ function _bounceAround(block)
     else
         block.x -= BOUNCE_SPEED;
     var xCheck = block.direction ? block.width + block.x - 0.1 : block.x + 0.1;
-    if (FindCollision(xCheck, block.y, block))
+    if (_findCollision(xCheck, block.y, block))
         block.direction = !block.direction;
+}
+
+/**
+ * Initialized Block Animations
+ * @param {Block} block - Block to animate
+ * @param {Object} animations - In state:frameCount format. Ex: {"default":2,"jump":6}
+ * @param {number} [speed=0.15] - Animation speed
+ * @private
+ */
+function _initAnim(block, animations, speed=0.15)
+{
+    block.useAnim = true;
+    block.animations = animations;
+    block.flip = false;
+    block.state = "default";
+    block.power = "";
+    block.frame = 1;
+    block.speed = speed;
 }

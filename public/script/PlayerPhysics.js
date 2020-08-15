@@ -44,6 +44,7 @@ function applyPlayerVectors(player, world)
     _correctYMovement(player, world);
     player.xVel *= X_MOTION_DAMPING;
     player.yVel *= Y_MOTION_DAMPING;
+    socket.emit('updatePlayer', player)
 }
 
 /**
@@ -132,16 +133,13 @@ class Player {
      */
     constructor(id, x, y)
     {   
-        
-        /*
-        // TODO Animation Testing
-        InitAnim(this, {
+        initAnim(this, {
             "default":1,
             "jump":1,
             "walk":3,
             "climb":1
         }, 0.2);
-        */
+        
         this.type = "entity/player-1";
         this.x = 1;
         this.y = 1;
@@ -156,6 +154,7 @@ class Player {
         this.onground   = false;
         this.jumping    = false;
         this.jumped     = false;
+        this.hop        = false
 
         /**
         * Runs if there is a collision between player and collider
@@ -183,17 +182,17 @@ class Player {
                     if (player.power == "")
                     {
                         var prop = "power/shroom-1";
-                        socket.emit('addBlock', world.id, prop, collider.x, collider.y-1, {"solid":false});
+                        socket.emit('addBlock', world.id, prop, collider.x, collider.y-1, {"isSolid":false});
                     }
                     else
                     {
                         var prop = "power/fire-1";
-                        socket.emit('addBlock', world.id, prop, collider.x, collider.y-1, {"solid":false});
+                        socket.emit('addBlock', world.id, prop, collider.x, collider.y-1, {"isSolid":false});
                     }
                 }
                 else if (collider.prop != "")
                 {
-                    socket.emit('addBlock', world.id, collider.prop, collider.x, collider.y-1, {"solid":false});
+                    socket.emit('addBlock', world.id, collider.prop, collider.x, collider.y-1, {"isSolid":false});
                     player.coins += 1;
                 }
                 return true;
@@ -261,7 +260,7 @@ class Player {
                socket.emit('deleteBlock', world.id, collider.id);
                return false;
            }
-           return collider.solid;
+           return collider.isSolid;
        }
 
         /**

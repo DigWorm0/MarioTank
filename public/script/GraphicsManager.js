@@ -145,7 +145,17 @@ function drawPlayers(players)
 {
     for (var id in players)
     {
-        drawBlock(players[id], players[id].x, players[id].y, false);
+        ctx.textAlign = 'center';
+        if (id == player.id)
+        {
+            drawBlock(player, Math.round(player.x*16)/16, player.y, false);
+            drawText(player.name, ((Math.round(player.x*16)/16) - 0.5)*16, (player.y - 1.2)*16)
+        }
+        else
+        {
+            drawBlock(players[id], Math.round(players[id].x*16)/16, players[id].y, false);
+            drawText(players[id].name, ((Math.round(players[id].x*16)/16) - 0.5)*16, (players[id].y - 1.2)*16)
+        }
     }
 }
 
@@ -156,6 +166,7 @@ function drawPlayers(players)
  */
 function drawGUI(player, world)
 {
+    ctx.textAlign = 'left';
     // Score
     drawText(player.name, 10 + cameraX, 20, "8px PressStart2P", "white");
     drawText(pad(player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");

@@ -27,7 +27,7 @@ socket.on('connect', () => {
      * @param {Object} changes - Changes to the block (Ex: {"isPhysics":true, "x":3})
      */
     socket.on('updateBlock', (worldID, block, changes) => {
-        if (world.id == worldID)
+        if (world.id == worldID && block in world.blocks)
         {
             for (var key in changes) {
                 world.blocks[block][key] = changes[key];

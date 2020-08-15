@@ -29,6 +29,7 @@ function _loop()
 function physicsLoop()
 {
     applyPlayerVectors(player, world);
+    player.update(player);
 }
 
 /**
@@ -84,10 +85,11 @@ function resetWorld()
     setTimeout(() => {
         bgColor = world.bgColor;
         blackDisplay = false;
+        player.y = 1;
         if (timerInterval != -1)
             clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             world.time--;
-        }, 1000)
+        }, 1000);
     }, 3000);
 }
