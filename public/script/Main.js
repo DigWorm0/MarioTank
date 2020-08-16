@@ -32,6 +32,9 @@ function physicsLoop()
 {
     applyPlayerVectors(player, world);
     player.update(player);
+    if (player.y>16 || world.time<0) {
+        player.die(true);
+    }
 }
 
 /**
@@ -44,16 +47,19 @@ function graphicsLoop()
         return;
     if (!blackDisplay)
     {
-        if (world.autoScroll && ((player.x - CELL_WIDTH/2) * 16) - cameraX > 50)
-            scrollTo(((player.x - CELL_WIDTH/2) * 16) - 50);
-        if (world.autoScroll && ((player.x - CELL_WIDTH/2) * 16) - cameraX < -50)
-            scrollTo(((player.x - CELL_WIDTH/2) * 16) + 50);
+        if (player.x && player.y) {
+            if (world.autoScroll && ((player.x - CELL_WIDTH/2) * CELL_SIZE) - cameraX > 50)
+                scrollTo(((player.x - CELL_WIDTH/2) * CELL_SIZE) - 50);
+            if (world.autoScroll && ((player.x - CELL_WIDTH/2) * CELL_SIZE) - cameraX < -50)
+                scrollTo(((player.x - CELL_WIDTH/2) * CELL_SIZE) + 50);
+        }
         drawWorld(world);
         drawPlayers(players);
     }
     else
     {
-        drawText(this.msg, 170, 100)
+        ctx.textAlign = 'center';
+        drawText(this.msg, canvas.width / 2, 6.25*CELL_SIZE)
     }
     drawGUI(player, world);
 }
@@ -94,8 +100,8 @@ function stallMsg(msg)
     world.time = 400;
     bgColor = "black";
     blackDisplay = true;
-    player.x = -100;
-    player.y = 100;
+    player.x = null;
+    player.y = null;
     this.msg = msg;
     clearInterval(timerInterval);
 }
@@ -105,7 +111,10 @@ function exitStall()
     bgColor = world.bgColor;
     blackDisplay = false;
     world.time = 400;
-    player.y = 1;
+    player.y = 2;
+    player.x = 2;
+    player.xVel = 0;
+    player.yVel = 0;
     if (timerInterval != -1)
         clearInterval(timerInterval);
     timerInterval = setInterval(() => {

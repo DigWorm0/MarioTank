@@ -85,5 +85,6 @@ socket.on('connect', () => {
 
     socket.on('disconnect', function() {
         stallMsg("Disconnected...");
+        players = {};
     });
 });

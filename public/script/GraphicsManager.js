@@ -6,9 +6,19 @@ var cameraX = 0;
 var cameraY = 0;
 var bgColor = "black";
 
+ctx.imageSmoothingEnabled = false;
 initAnim(coinAnim, {
     "default":8
 }, 0.15);
+window.addEventListener('resize', function() {
+    var aspect = window.innerWidth/window.innerHeight;
+    var width = canvas.height * aspect;
+    width = Math.ceil(width/CELL_SIZE)*CELL_SIZE;
+    canvas.width = width;
+    ctx.imageSmoothingEnabled = false;
+    CELL_WIDTH = width / CELL_SIZE;
+});
+window.dispatchEvent(new Event('resize'));
 
 /**
  * Draws a rectangle
@@ -21,7 +31,7 @@ initAnim(coinAnim, {
 function drawRect(x, y, width, height, color)
 {
     ctx.fillStyle = color;
-    ctx.fillRect(x*16 - cameraX, y*16 - cameraY, width*16, height*16)
+    ctx.fillRect(x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, width*CELL_SIZE, height*CELL_SIZE)
 }
 
 /**
@@ -36,8 +46,8 @@ function drawLine(x1, y1, x2, y2, color)
 {
     ctx.strokeStyle = color;
     ctx.beginPath();
-    ctx.moveTo(x1*16 - cameraX, y1*16 - cameraY);
-    ctx.lineTo(x2*16 - cameraX, y2*16 - cameraY);
+    ctx.moveTo(x1*CELL_SIZE - cameraX, y1*CELL_SIZE - cameraY);
+    ctx.lineTo(x2*CELL_SIZE - cameraX, y2*CELL_SIZE - cameraY);
     ctx.stroke();
 }
 
@@ -49,7 +59,7 @@ function drawLine(x1, y1, x2, y2, color)
  * @param {string} [font="8px PressStart2P"]
  * @param {string} [color="white"]
  */
-function drawText(text, x, y, font="8px PressStart2P", color="white")
+function drawText(text, x, y, font=(CELL_SIZE / 2) + "px PressStart2P", color="white")
 {
     ctx.fillStyle = color;
     ctx.font = font;
@@ -68,9 +78,9 @@ function drawSprite(sprite, x, y, width=1, height=1)
 {
     try {
         if (width == 1 && height == 1)
-            ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY);
+            ctx.drawImage(sprite, x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, sprite.width * SPRITE_SCALE, sprite.height * SPRITE_SCALE);
         else
-            ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY, width*16, height*16);
+            ctx.drawImage(sprite, x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, width*CELL_SIZE, height*CELL_SIZE);
     }
     catch {}
 }
@@ -152,13 +162,13 @@ function drawPlayers(players)
         ctx.textAlign = 'center';
         if (id == player.id)
         {
-            drawBlock(player, Math.round(player.x*16)/16, player.y, false);
-            drawText(player.name, ((Math.round(player.x*16)/16) - 0.5)*16, (player.y - 1.2)*16)
+            drawBlock(player, Math.round(player.x*CELL_SIZE)/CELL_SIZE, player.y, false);
+            drawText(player.name, ((Math.round(player.x*CELL_SIZE)/CELL_SIZE) - 0.5)*CELL_SIZE, (player.y - 1.2)*CELL_SIZE)
         }
         else
         {
-            drawBlock(players[id], Math.round(players[id].x*16)/16, players[id].y, false);
-            drawText(players[id].name, ((Math.round(players[id].x*16)/16) - 0.5)*16, (players[id].y - 1.2)*16)
+            drawBlock(players[id], Math.round(players[id].x*CELL_SIZE)/CELL_SIZE, players[id].y, false);
+            drawText(players[id].name, ((Math.round(players[id].x*CELL_SIZE)/CELL_SIZE) - 0.5)*CELL_SIZE, (players[id].y - 1.2)*CELL_SIZE)
         }
     }
 }
@@ -172,19 +182,19 @@ function drawGUI(player, world)
 {
     ctx.textAlign = 'left';
     // Score
-    drawText(player.name, 10 + cameraX, 20, "8px PressStart2P", "white");
-    drawText(pad(player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");
+    drawText(player.name, (.625*CELL_SIZE) + cameraX, 1.25 * CELL_SIZE);
+    drawText(pad(player.score, 6), (.625*CELL_SIZE) + cameraX, 1.875 * CELL_SIZE);
     // Coins
-    drawText("x" + pad(player.coins, 2), 100 + cameraX, 30, "8px PressStart2P", "white");
-    drawSprite(getSprite("gui/coin-1" + getAnim(coinAnim)), (90/16) + (cameraX/16), 21/16);
+    drawText("x" + pad(player.coins, 2), (6.25*CELL_SIZE) + cameraX, 1.875 * CELL_SIZE);
+    drawSprite(getSprite("gui/coin-1" + getAnim(coinAnim)), 5.6 + cameraX / CELL_SIZE, 1.3); 
     // World
-    drawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
-    drawText(world.displayName, 158 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("WORLD", (9.375*CELL_SIZE) + cameraX, 1.25 * CELL_SIZE);
+    drawText(world.displayName, (9.875*CELL_SIZE) + cameraX, 1.875*CELL_SIZE);
     // Time
-    drawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
+    drawText("TIME", (13.75*CELL_SIZE) + cameraX, 1.25 * CELL_SIZE);
     if (!(world.time))
         world.time = 400;
-    drawText(pad(world.time, 3), 225 + cameraX, 30, "8px PressStart2P", "white");
+    drawText(pad(world.time, 3), (14.06*CELL_SIZE) + cameraX, 1.875*CELL_SIZE);
 }
 
 /**
@@ -207,7 +217,7 @@ function pad(num, size) {
  */
 function clearDraw(backgroundColor=bgColor)
 {
-    drawRect(cameraX / 16, cameraY / 16, CELL_WIDTH, CELL_HEIGHT, backgroundColor);
+    drawRect(cameraX / CELL_SIZE, cameraY / CELL_SIZE, CELL_WIDTH, CELL_HEIGHT, backgroundColor);
 }
 
 

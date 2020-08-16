@@ -8,6 +8,8 @@ function applyPlayerVectors(player, world)
     // Controls
     if (!(player))
         return;
+    if (!(player.x) || !(player.y))
+        return;
     UpdateControls();
     if (Controls.up && player.onground && !player.jumping)
     {
@@ -141,8 +143,8 @@ class Player {
         }, 0.2);
         
         this.type       = "entity/player-1";
-        this.x          = -100;
-        this.y          = 100;
+        this.x          = null;
+        this.y          = null;
         this.xVel       = 0;
         this.yVel       = 0;
         this.height     = 1;
@@ -300,6 +302,7 @@ class Player {
             }
             else if (!this.invinsible || force)
             {
+                this.power = "";
                 resetWorld()
             }
         }
@@ -310,7 +313,7 @@ class Player {
          */
         this.update = function(player)
         {
-            player.state = (Math.abs(player.xVel * 16) > 0.2) ? "walk" : "default";
+            player.state = (Math.abs(player.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
             player.state = player.jumped ? "jump" : player.state;
             player.flip = Math.abs(player.xVel) > 0.01 ? player.xVel < 0 : player.flip;
         }
