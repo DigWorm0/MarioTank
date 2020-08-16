@@ -6,6 +6,10 @@ var cameraX = 0;
 var cameraY = 0;
 var bgColor = "black";
 
+initAnim(coinAnim, {
+    "default":8
+}, 0.15);
+
 /**
  * Draws a rectangle
  * @param {number} x
@@ -172,8 +176,7 @@ function drawGUI(player, world)
     drawText(pad(player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");
     // Coins
     drawText("x" + pad(player.coins, 2), 100 + cameraX, 30, "8px PressStart2P", "white");
-    //BounceAnimation(coinAnim);
-    drawSprite(coinAnim.sprite, 90 + cameraX, 21);
+    drawSprite(getSprite("gui/coin-1" + getAnim(coinAnim)), (90/16) + (cameraX/16), 21/16);
     // World
     drawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
     drawText(world.displayName, 158 + cameraX, 30, "8px PressStart2P", "white");

@@ -2,16 +2,19 @@
  * Module Exports
  * @param {Object} io - Socket.io
  */
-module.exports.load = function(io)
+module.exports.load = function(io, worlds)
 {
     this.io = io;
+    this.worlds = worlds;
+
     module.exports.blockInits = {
         "coin/coin-anim-1":(entity) => {
             _initAnim(entity, {
-                "default":4
+                "default":6
             }, 0.2);
             setTimeout(() => {
-                delete worlds[entity.world].blocks[entity.id]
+                io.emit("removeBlock", entity.world, entity.id)
+                delete this.worlds[entity.world].blocks[entity.id];
             }, 500);
         },
         "question/block-1":(entity) => {
@@ -19,12 +22,24 @@ module.exports.load = function(io)
                 "default":6,
                 "used":1
             }, 0.12);
+        },
+        "entity/goomba-1":(entity) => {
+            _initAnim(entity, {
+                "default":2,
+                "squash":1,
+                "flip":1
+            });
+            entity.isPhysics = true;
+            entity.isGravity = true;
         }
     };
     module.exports.blockUpdates = {
         "coin/coin-anim-1":(entity) => {
-            entity.y -= 0.1;
+            entity.y -= 0.2;
             this.io.emit("updateBlock", entity.world, entity.id, {"y":entity.y});
+        },
+        "entity/goomba-1":(entity) => {
+            _bounceAround(entity, this.worlds[entity.world]);
         }
     };
 
@@ -41,8 +56,8 @@ module.exports.load = function(io)
             {
                 world.blocks[id].update(world.blocks[id]);
             }
-            if (world.blocks[id].physics) {
-                updateBlock(world.blocks[id], world);
+            if (world.blocks[id].isPhysics) {
+                module.exports.updateBlock(world.blocks[id], world);
             }
         }
     }
@@ -54,16 +69,16 @@ module.exports.load = function(io)
      */
     module.exports.updateBlock = function(block, world)
     {
-        if (block.gravity)
-            block.yVel += GRAVITY;
-        block.x += block.xVel;
-        _correctXMovement(block, world);
+        if (block.isGravity)
+            block.yVel += .025;
         block.y += block.yVel;
         _correctYMovement(block, world);
-        block.xVel *= X_MOTION_DAMPING;
-        block.yVel *= Y_MOTION_DAMPING;
+        block.x += block.xVel;
+        _correctXMovement(block, world);
+        block.xVel *= .9;
+        block.yVel *= .999;
 
-        this.io.emit("changeBlock", world.id, block.id, {x:block.x, y:block.y});
+        this.io.emit("updateBlock", world.id, block.id, {x:block.x, y:block.y, xVel:block.xVel, yVel:block.yVel});
     }
 }
 
@@ -159,16 +174,16 @@ function _findCollision(x, y, block, world, width = 0, height = 0)
  * @param {Object} block - Block to bounce around
  * @private
  */
-function _bounceAround(block)
+function _bounceAround(block, world)
 {
     if (block.direction == undefined || block.direction == null)
         block.direction = false;
     if (block.direction)
-        block.x += BOUNCE_SPEED;
+        block.xVel = .08;
     else
-        block.x -= BOUNCE_SPEED;
-    var xCheck = block.direction ? block.width + block.x - 0.1 : block.x + 0.1;
-    if (_findCollision(xCheck, block.y, block))
+        block.xVel = -.08;
+    var xCheck = block.direction ? block.width + block.x + 0.1 : block.x - 0.1;
+    if (_findCollision(xCheck, block.y, block, world))
         block.direction = !block.direction;
 }
 

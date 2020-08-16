@@ -1,3 +1,5 @@
+var worlds = {};
+
 const request = require("request")
 const express = require('express');
 const app = express()
@@ -6,7 +8,6 @@ const io = require('socket.io')(server, {});
 const phys = require('./WorldPhysics');
 const port = 8080;
 
-var worlds = {};
 //var last = GetTimestamp();
 //var dt = 0;
 
@@ -73,6 +74,7 @@ class Block {
         this.type = type;
         this.x = x;
         this.y = y;
+        this.world = world;
 
         // Defaults
         this.id = createID();
@@ -250,7 +252,7 @@ function loop() {
 /* #endregion */
 
 /* #region  Http Server */
-phys.load(io);
+phys.load(io, worlds);
 
 app.get('/', (req, res) => {
     if (req.query.name)

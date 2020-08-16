@@ -140,11 +140,11 @@ class Player {
             "climb":1
         }, 0.2);
         
-        this.type = "entity/player-1";
-        this.x = 1;
-        this.y = 1;
-        this.xVel = 0;
-        this.yVel = 0;
+        this.type       = "entity/player-1";
+        this.x          = 1;
+        this.y          = 1;
+        this.xVel       = 0;
+        this.yVel       = 0;
         this.height     = 1;
         this.width      = 0.8;
         this.coins      = 0;
@@ -195,11 +195,26 @@ class Player {
                     socket.emit('addBlock', world.id, collider.prop, collider.x, collider.y-1, {"isSolid":false});
                     player.coins += 1;
                 }
+
+                // Hop
+                socket.emit('updateBlock', world.id, collider.id, {"hop":true})
+                collider.hop = true;
+                var c = collider.id;
+                setTimeout(() => {
+                    socket.emit('updateBlock', world.id, c, {"hop":false})
+                    collider.hop = false;
+                }, 100);
                 return true;
            }
            // Bricks
            else if (collider.type.includes("brick/float-") && player.x + player.width - 0.1 > collider.x && player.x + 0.1 < collider.x + collider.width && player.yVel < 0 && !(collider.jumped)) {
-                // TODO Hop Block
+                socket.emit('updateBlock', world.id, collider.id, {"hop":true})
+                collider.hop = true;
+                var c = collider.id;
+                setTimeout(() => {
+                    socket.emit('updateBlock', world.id, c, {"hop":false})
+                    collider.hop = false;
+                }, 100);
                 return true;
            }
            // Goomba
@@ -208,14 +223,18 @@ class Player {
                if (player.yVel > 0.02) {
                    var b = collider;
                    setTimeout(() => {
-                       socket.emit('deleteBlock', world.id, b.id);
+                       socket.emit('removeBlock', world.id, b.id);
                    }, 200);
                
                    socket.emit('updateBlock', world.id, collider.id, {
                        "speed":0,
                        "state":"squash",
-                       "solid":false,
-                       "y":collider.y + 0.75
+                       "isSolid":false,
+                       "y":collider.y + 0.75,
+                       "isPhysics":false,
+                       "isGravity":false,
+                       "repeat":false,
+                       "height":(1/3)
                    });
    
                    player.score += 100;

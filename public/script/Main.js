@@ -91,5 +91,5 @@ function resetWorld()
         timerInterval = setInterval(() => {
             world.time--;
         }, 1000);
-    }, 3000);
+    }, 1); // 2000
 }
