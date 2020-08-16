@@ -182,6 +182,8 @@ function drawGUI(player, world)
     drawText(world.displayName, 158 + cameraX, 30, "8px PressStart2P", "white");
     // Time
     drawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
+    if (!(world.time))
+        world.time = 400;
     drawText(pad(world.time, 3), 225 + cameraX, 30, "8px PressStart2P", "white");
 }
 

@@ -15,7 +15,7 @@ module.exports.load = function(io, worlds)
             setTimeout(() => {
                 io.emit("removeBlock", entity.world, entity.id)
                 delete this.worlds[entity.world].blocks[entity.id];
-            }, 500);
+            }, 400);
         },
         "question/block-1":(entity) => {
             _initAnim(entity, {

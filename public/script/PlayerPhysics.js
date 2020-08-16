@@ -141,8 +141,8 @@ class Player {
         }, 0.2);
         
         this.type       = "entity/player-1";
-        this.x          = 1;
-        this.y          = 1;
+        this.x          = -100;
+        this.y          = 100;
         this.xVel       = 0;
         this.yVel       = 0;
         this.height     = 1;
@@ -256,12 +256,12 @@ class Player {
            // Shroom
            else if (collider.type == "power/shroom-1")
            {
-               if (collider.power == "") {
+               if (player.power == "") {
                    player.power = "tall";
                    player.y -= 1;
                    player.height = 2;
                }
-               socket.emit('deleteBlock', world.id, collider.id);
+               socket.emit('removeBlock', world.id, collider.id);
                return false;
            }
            // Fire Power
@@ -276,7 +276,7 @@ class Player {
                {
                    player.power = "fire";
                }
-               socket.emit('deleteBlock', world.id, collider.id);
+               socket.emit('removeBlock', world.id, collider.id);
                return false;
            }
            return collider.isSolid;
@@ -300,7 +300,7 @@ class Player {
             }
             else if (!this.invinsible || force)
             {
-                // TODO Death
+                resetWorld()
             }
         }
 
@@ -312,8 +312,6 @@ class Player {
         {
             player.state = (Math.abs(player.xVel * 16) > 0.2) ? "walk" : "default";
             player.state = player.jumped ? "jump" : player.state;
-            if (player.power != "" && player.power != undefined)
-                player.state = player.power + "_" + player.state;
             player.flip = Math.abs(player.xVel) > 0.01 ? player.xVel < 0 : player.flip;
         }
     }

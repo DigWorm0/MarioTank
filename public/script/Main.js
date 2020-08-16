@@ -3,7 +3,9 @@ var dt = 0;
 var lastLoop = new Date();
 var blackDisplay = false;
 var timerInterval = -1;
+var countdownInterval = -1;
 var waitForWorld = true;
+var msg = "";
 
 /**
  * Manages the speed of GraphicsLoop and PhysicsLoop
@@ -51,7 +53,7 @@ function graphicsLoop()
     }
     else
     {
-        drawText("WORLD " + world.displayName, 170, 100)
+        drawText(this.msg, 170, 100)
     }
     drawGUI(player, world);
 }
@@ -78,18 +80,46 @@ function _getTimestamp() {
  */
 function resetWorld()
 {
+    stallMsg("WORLD " + world.displayName);
+    if (countdownInterval != -1)
+        clearInterval(countdownInterval);
+    countdownInterval = setTimeout(() => {
+        exitStall();
+    }, 2000);
+}
+
+function stallMsg(msg)
+{
     cameraX = 0;
     world.time = 400;
     bgColor = "black";
     blackDisplay = true;
-    setTimeout(() => {
-        bgColor = world.bgColor;
-        blackDisplay = false;
-        player.y = 1;
-        if (timerInterval != -1)
-            clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
+    player.x = -100;
+    player.y = 100;
+    this.msg = msg;
+    clearInterval(timerInterval);
+}
+
+function exitStall()
+{
+    bgColor = world.bgColor;
+    blackDisplay = false;
+    world.time = 400;
+    player.y = 1;
+    if (timerInterval != -1)
+        clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        if (world.time)
             world.time--;
-        }, 1000);
-    }, 1); // 2000
+        else
+            world.time = 400;
+    }, 1000);
+    for (var key in world.blocks)
+    {
+        if (world.blocks[key].type == "spawn/default")
+        {
+            player.x = world.blocks[key].x;
+            player.y = world.blocks[key].y;
+        }
+    }
 }

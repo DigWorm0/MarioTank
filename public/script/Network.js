@@ -8,6 +8,10 @@ var world;
  */
 socket.on('connect', () => {
     player = new Player(socket.id, 1, 1);
+    if (blackDisplay) {
+        socket.emit('getWorld', world.id);
+        resetWorld();
+    }
 
     /**
      * Adds a block into the world
@@ -77,5 +81,9 @@ socket.on('connect', () => {
      */
     socket.on('disconnectPlayer', function(id) {
         delete players[id];
+    });
+
+    socket.on('disconnect', function() {
+        stallMsg("Disconnected...");
     });
 });
