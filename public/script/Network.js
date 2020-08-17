@@ -60,7 +60,8 @@ socket.on('connect', () => {
      */
     socket.on('returnWorld', function(worldData) {
         world = worldData;
-        bgColor = world.bgColor;
+        if (!blackDisplay)
+            bgColor = world.bgColor;
         if (waitForWorld) {
             waitForWorld = false;
             start();

@@ -26,5 +26,6 @@ var powerups = {
             "isRepeat":false,
             "direction":player.flip
         })
-    })
+    }),
+    "sanic":new PowerUp("sanic", 2, 2, () => {})
 };

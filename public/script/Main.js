@@ -128,7 +128,7 @@ function exitStall()
         if (world.blocks[key].type == "spawn/default")
         {
             player.x = world.blocks[key].x;
-            player.y = world.blocks[key].y;
+            player.y = world.blocks[key].y - player.height;
         }
     }
 }

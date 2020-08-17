@@ -296,6 +296,8 @@ class Player {
             }
             else if (!this.invinsible || force)
             {
+                this.height = 1;
+                this.width = 0.8;
                 this.power = "";
                 resetWorld()
             }
