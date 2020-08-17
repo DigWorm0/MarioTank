@@ -134,7 +134,7 @@ function drawWorld(world)
 {
     for (id in world.blocks)
     {
-        if (world.blocks[id].repeat)
+        if (world.blocks[id].isRepeat)
         {
             for(var x = 0; x < world.blocks[id].width; x++)
             {

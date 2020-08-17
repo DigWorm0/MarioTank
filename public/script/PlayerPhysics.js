@@ -170,7 +170,7 @@ class Player {
            if (collider.type.includes("coin/coin-") && collider.type != "coin/coin-anim-1")
            {
                 player.coins++;
-                socket.emit('deleteBlock', world.id, collider.id);
+                socket.emit('removeBlock', world.id, collider.id);
                 return false;
            }
            // Question Block

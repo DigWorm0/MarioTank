@@ -3,6 +3,11 @@ var GamepadControls = {};
 var KeyboardControls = {};
 var freezeControls = false;
 
+for (const control in CONTROL_KEY_CODES)
+{
+    KeyboardControls[control] = false;
+}
+
 /**
  * Updates Controls with information from Gamepad and Keyboard
  */

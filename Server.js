@@ -6,7 +6,7 @@ const app = express()
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {});
 const phys = require('./WorldPhysics');
-const port = 8080;
+var port = process.env.PORT || 3000;
 
 //var last = GetTimestamp();
 //var dt = 0;
@@ -35,7 +35,7 @@ class World {
     download() {
         var world = this;
         const promise = new Promise(function (resolve, reject) {
-            var url = "http://localhost:8080/worldData/" + world.id + ".json";
+            var url = "https://supermario.wtf/worldData/" + world.id + ".json";
             console.log(url);
             request({
                 url: url,
