@@ -1,3 +1,4 @@
+
 /**
  * Applys controls, velocity, and gravity to player
  * @param {Object} player - Player to apply vectors to
@@ -37,6 +38,15 @@ function applyPlayerVectors(player, world)
         player.xVel += Controls.horizontal * PLAYER_SPEED;
     else
         player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
+    
+    if (!player.fired && Controls.fire && player.power in powerups)
+    {
+        player.fired = true;
+        setTimeout(() => {
+            player.fired = false;
+        }, 1000);
+        powerups[player.power].fire();
+    }
 
     // Physics
     player.yVel += GRAVITY;
@@ -156,6 +166,7 @@ class Player {
         this.onground   = false;
         this.jumping    = false;
         this.jumped     = false;
+        this.fired      = false;
         this.hop        = false
 
         /**
@@ -181,16 +192,9 @@ class Player {
                 player.score += 200;
                 // TODO Hop Block
                 if (collider.prop == "powerup") {
-                    if (player.power == "")
-                    {
-                        var prop = "power/shroom-1";
-                        socket.emit('addBlock', world.id, prop, collider.x, collider.y-1, {"isSolid":false});
-                    }
-                    else
-                    {
-                        var prop = "power/fire-1";
-                        socket.emit('addBlock', world.id, prop, collider.x, collider.y-1, {"isSolid":false});
-                    }
+                    var keys = Object.keys(powerups);
+                    var prop = "power/" + keys[Math.floor(Math.random() * keys.length)] + "-1";
+                    socket.emit('addBlock', world.id, prop, collider.x, collider.y-1, {"isSolid":false});
                 }
                 else if (collider.prop != "")
                 {
@@ -228,6 +232,7 @@ class Player {
                        socket.emit('removeBlock', world.id, b.id);
                    }, 200);
                
+                   collider.isSolid = false;
                    socket.emit('updateBlock', world.id, collider.id, {
                        "speed":0,
                        "state":"squash",
@@ -255,31 +260,19 @@ class Player {
                }
                return false;
            }
-           // Shroom
-           else if (collider.type == "power/shroom-1")
+           else if (collider.type.substring(0, 6) == "power/")
            {
-               if (player.power == "") {
-                   player.power = "tall";
-                   player.y -= 1;
-                   player.height = 2;
-               }
-               socket.emit('removeBlock', world.id, collider.id);
-               return false;
-           }
-           // Fire Power
-           else if (collider.type == "power/fire-1")
-           {
-               if (player.power == "") {
-                   player.power = "fire";
-                   player.y -= 1;
-                   player.height = 2;
-               }
-               else if (player.power == "tall")
-               {
-                   player.power = "fire";
-               }
-               socket.emit('removeBlock', world.id, collider.id);
-               return false;
+                var power = collider.type.substring(6, collider.type.length-2);
+                if (power in powerups)
+                {
+                    player.power = power;
+                    power = powerups[power];
+                    player.y += player.height-power.height;
+                    player.height = power.height;
+                    player.width = power.width;
+                    socket.emit('removeBlock', world.id, collider.id);
+                    return false;
+                }
            }
            return collider.isSolid;
        }
@@ -294,6 +287,7 @@ class Player {
             {
                 this.power = "";
                 this.height = 1;
+                this.width = 0.8;
                 this.invinsible = true;
                 setTimeout(() => {
                     this.invinsible = false;

@@ -31,6 +31,12 @@ module.exports.load = function(io, worlds)
             });
             entity.isPhysics = true;
             entity.isGravity = true;
+        },
+        "tank/bullet-1":(entity) => {
+            setTimeout(() => {
+                io.emit("removeBlock", entity.world, entity.id)
+                delete this.worlds[entity.world].blocks[entity.id];
+            }, 1000);
         }
     };
     module.exports.blockUpdates = {
@@ -40,6 +46,22 @@ module.exports.load = function(io, worlds)
         },
         "entity/goomba-1":(entity) => {
             _bounceAround(entity, this.worlds[entity.world]);
+        },
+        "tank/bullet-1":(entity) => {
+            if (entity.direction)
+                entity.x -= 1;
+            else
+                entity.x += 1;
+            this.io.emit("updateBlock", entity.world, entity.id, {"x":entity.x});
+            var collider = _findCollision(entity.x, entity.y, entity, this.worlds[entity.world], entity.width, entity.height);
+            if (collider)
+            {
+                io.emit("removeBlock", entity.world, entity.id)
+                delete this.worlds[entity.world].blocks[entity.id];
+
+                io.emit("removeBlock", collider.world, collider.id)
+                delete this.worlds[collider.world].blocks[collider.id];
+            }
         }
     };
 
@@ -52,12 +74,12 @@ module.exports.load = function(io, worlds)
     {
         for (id in world.blocks)
         {
+            if (world.blocks[id].isPhysics) {
+                module.exports.updateBlock(world.blocks[id], world);
+            }
             if ("update" in world.blocks[id])
             {
                 world.blocks[id].update(world.blocks[id]);
-            }
-            if (world.blocks[id].isPhysics) {
-                module.exports.updateBlock(world.blocks[id], world);
             }
         }
     }

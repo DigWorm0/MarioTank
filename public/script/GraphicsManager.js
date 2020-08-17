@@ -163,12 +163,12 @@ function drawPlayers(players)
         if (id == player.id)
         {
             drawBlock(player, Math.round(player.x*CELL_SIZE)/CELL_SIZE, player.y, false);
-            drawText(player.name, ((Math.round(player.x*CELL_SIZE)/CELL_SIZE) - 0.5)*CELL_SIZE, (player.y - 1.2)*CELL_SIZE)
+            drawText(player.name, ((player.x - 1) + (player.width / 2)) * CELL_SIZE, (player.y - 1.2)*CELL_SIZE, "7.5px PressStart2P");
         }
         else
         {
             drawBlock(players[id], Math.round(players[id].x*CELL_SIZE)/CELL_SIZE, players[id].y, false);
-            drawText(players[id].name, ((Math.round(players[id].x*CELL_SIZE)/CELL_SIZE) - 0.5)*CELL_SIZE, (players[id].y - 1.2)*CELL_SIZE)
+            drawText(players[id].name, ((players[id].x - 1) + (players[id].width / 2)) * CELL_SIZE, (players[id].y - 1.2)*CELL_SIZE, "7.5px PressStart2P")
         }
     }
 }

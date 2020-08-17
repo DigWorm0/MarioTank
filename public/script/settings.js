@@ -22,14 +22,16 @@ const CONTROL_KEY_CODES = {
     down: 40,
     left: 37,
     right: 39,
-    sprint: 16
+    sprint: 16,
+    fire: 32
 };
 const GAMEPAD_CODES = {
     up: 0,
     down: 13,
     left: 14,
     right: 15,
-    sprint: 2
+    sprint: 2,
+    fire: 5
 }
 const DEBUG = false;
 const STEP = 1/MAX_FPS;
