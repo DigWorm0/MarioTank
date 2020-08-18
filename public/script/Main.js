@@ -31,8 +31,8 @@ function _loop()
 function physicsLoop()
 {
     applyPlayerVectors(player, world);
-    player.update(player);
-    if (player.y>16 || world.time<0) {
+    playerUpdate()
+    if (player.y>18 || world.time<1) {
         player.die(true);
     }
 }

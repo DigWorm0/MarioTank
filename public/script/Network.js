@@ -60,6 +60,7 @@ socket.on('connect', () => {
      */
     socket.on('returnWorld', function(worldData) {
         world = worldData;
+        player.world = world.id;
         if (!blackDisplay)
             bgColor = world.bgColor;
         if (waitForWorld) {

@@ -37,6 +37,12 @@ module.exports.load = function(io, worlds)
                 io.emit("removeBlock", entity.world, entity.id)
                 delete this.worlds[entity.world].blocks[entity.id];
             }, 1000);
+        },
+        "power/fire-1":(entity) => {
+            _initAnim(entity, {
+                "default":4
+            });
+            console.log("a")
         }
     };
     module.exports.blockUpdates = {

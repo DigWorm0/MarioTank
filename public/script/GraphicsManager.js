@@ -160,6 +160,8 @@ function drawPlayers(players)
 {
     for (var id in players)
     {
+        if (players[id].world != world.id)
+            continue;
         ctx.textAlign = 'center';
         if (id == player.id)
         {

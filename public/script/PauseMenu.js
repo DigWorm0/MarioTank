@@ -43,6 +43,8 @@ function teleport(id)
         player.y = players[id].y;
         player.yVel = 0;
         player.xVel = 0;
+        if (players[id].world != world.id)
+            socket.emit("getWorld", players[id].world)
         paused = true;
         togglePause();
     }

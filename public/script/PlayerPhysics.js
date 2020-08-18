@@ -131,6 +131,120 @@ function _boxCollider(x1, y1, w1, h1, x2, y2, w2, h2)
 }
 
 /**
+ * Updates player each Frame
+ * @param {Object} block
+ */
+function playerUpdate()
+{
+    for (var id in world.blocks)
+    {
+        var block = world.blocks[id];
+        // Bricks
+        if (block.type.includes("brick/float-"))
+        {
+            var top = _boxCollider(player.x + 0.01, player.y - 0.01, player.width - 0.02, 0.01, block.x, block.y, block.width, block.height);
+            if (top)
+            {
+                if (player.power == "")
+                {
+                    socket.emit('updateBlock', world.id, block.id, {"hop":true});
+                    block.hop = true;
+                    var c = block.id;
+                    setTimeout(() => {
+                        socket.emit('updateBlock', world.id, c, {"hop":false});
+                        world.blocks[c].hop = false;
+                    }, 100);
+                }
+                else
+                {
+                    // TODO Break Particles
+                    socket.emit('removeBlock', world.id, block.id);
+                }
+            }
+        }
+
+        // Question Blocks
+        if (block.type.includes("question/block-"))
+        {
+            var top = _boxCollider(player.x + 0.01, player.y - 0.01, player.width - 0.02, 0.01, block.x, block.y, block.width, block.height);
+            if (block.state != "used" && top)
+            {
+                player.score += 200;
+                if (block.prop == "powerup") {
+                    var keys = Object.keys(powerups);
+                    var prop = "power/" + keys[Math.floor(Math.random() * keys.length)] + "-1";
+                    socket.emit('addBlock', world.id, prop, block.x, block.y-1, {"isSolid":false});
+                }
+                else if (block.prop != "")
+                {
+                    socket.emit('addBlock', world.id, block.prop, block.x, block.y-1, {"isSolid":false});
+                    player.coins += 1;
+                }
+
+                // Hop
+                socket.emit('updateBlock', world.id, block.id, {"hop":true, "state":"used"});
+                block.state = "used";
+                block.hop = true;
+                var d = block.id;
+                setTimeout(() => {
+                    socket.emit('updateBlock', world.id, d, {"hop":false})
+                    world.blocks[d].hop = false;
+                }, 100);
+            }
+        }
+
+        // Goomba
+        if (block.type == "entity/goomba-1")
+        {
+            var bottom = _boxCollider(player.x + 0.01, player.y + player.height + 0.01, player.width - 0.02, 0.01, block.x, block.y, block.width, block.height);
+            var around = _boxCollider(player.x - 0.01, player.y - 0.01, player.width + 0.02, player.height + 0.01, block.x, block.y, block.width, block.height)
+            
+            if (bottom)
+            {
+                if (block.type == "entity/goomba-1")
+                {
+                    var b = block;
+                    setTimeout(() => {
+                        socket.emit('removeBlock', world.id, b.id);
+                    }, 200);
+                
+                    block.isSolid = false;
+                    socket.emit('updateBlock', world.id, block.id, {
+                        "speed":0,
+                        "state":"squash",
+                        "isSolid":false,
+                        "y":block.y + 0.75,
+                        "isPhysics":false,
+                        "isGravity":false,
+                        "repeat":false,
+                        "height":(1/3)
+                    });
+    
+                    player.score += 100;
+    
+                    if (Controls.up) {
+                        player.yVel = -BOUNCE_FORCE * 3;
+                        player.jumped = true
+                    }
+                    else
+                        player.yVel = -BOUNCE_FORCE;
+                    player.y += player.yVel;
+                }
+            }
+            else if (around)
+            {
+                player.die();
+            }
+        }
+    }
+
+    // Animation State
+    player.state = (Math.abs(player.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
+    player.state = player.jumped ? "jump" : player.state;
+    player.flip = Math.abs(player.xVel) > 0.01 ? player.xVel < 0 : player.flip;
+}
+
+/**
  * Class representing a Player
  */
 class Player {
@@ -169,6 +283,7 @@ class Player {
         this.jumped     = false;
         this.fired      = false;
         this.hop        = false;
+        this.world      = "1-1";
 
         /**
         * Runs if there is a collision between player and collider
@@ -186,91 +301,7 @@ class Player {
                 socket.emit('removeBlock', world.id, collider.id);
                 return false;
            }
-           // Question Block
-           else if (collider.type.includes("question/block-") &&  player.x + player.width - 0.1 > collider.x && player.x + 0.1 < collider.x + collider.width && player.yVel < 0 && collider.state != "used")
-           {
-                collider.state = "used";
-                socket.emit('updateBlock', world.id, collider.id, {"state":"used"})
-                player.score += 200;
-                // TODO Hop Block
-                if (collider.prop == "powerup") {
-                    var keys = Object.keys(powerups);
-                    var prop = "power/" + keys[Math.floor(Math.random() * keys.length)] + "-1";
-                    socket.emit('addBlock', world.id, prop, collider.x, collider.y-1, {"isSolid":false});
-                }
-                else if (collider.prop != "")
-                {
-                    socket.emit('addBlock', world.id, collider.prop, collider.x, collider.y-1, {"isSolid":false});
-                    player.coins += 1;
-                }
-
-                // Hop
-                socket.emit('updateBlock', world.id, collider.id, {"hop":true})
-                collider.hop = true;
-                var c = collider.id;
-                setTimeout(() => {
-                    socket.emit('updateBlock', world.id, c, {"hop":false})
-                    collider.hop = false;
-                }, 100);
-                return true;
-           }
-           // Bricks
-           else if (collider.type.includes("brick/float-") && player.x + player.width - 0.1 > collider.x && player.x + 0.1 < collider.x + collider.width && player.yVel < 0 && !(collider.jumped)) {
-                if (player.power == "")
-                {
-                    socket.emit('updateBlock', world.id, collider.id, {"hop":true});
-                    collider.hop = true;
-                    var c = collider.id;
-                    setTimeout(() => {
-                        socket.emit('updateBlock', world.id, c, {"hop":false})
-                        collider.hop = false;
-                    }, 100);
-                }
-                else
-                {
-                    socket.emit('removeBlock', world.id, collider.id);
-                }
-                
-                return true;
-           }
-           // Goomba
-           else if (collider.type == "entity/goomba-1" && collider.isSolid)
-           {
-               if (player.yVel > 0.02 || player.yVel == -BOUNCE_FORCE) {
-                   var b = collider;
-                   setTimeout(() => {
-                       socket.emit('removeBlock', world.id, b.id);
-                   }, 200);
-               
-                   collider.isSolid = false;
-                   socket.emit('updateBlock', world.id, collider.id, {
-                       "speed":0,
-                       "state":"squash",
-                       "isSolid":false,
-                       "y":collider.y + 0.75,
-                       "isPhysics":false,
-                       "isGravity":false,
-                       "repeat":false,
-                       "height":(1/3)
-                   });
-   
-                   player.score += 100;
-   
-                   if (Controls.up) {
-                       player.yVel = -BOUNCE_FORCE * 2;
-                       player.jumped = true
-                   }
-                   else
-                       player.yVel = -BOUNCE_FORCE;
-                   player.y += player.yVel;
-               }
-               else
-               {
-                   console.log(player.yVel)
-                   player.die();
-               }
-               return false;
-           }
+           // Power Up
            else if (collider.type.substring(0, 6) == "power/")
            {
                 var power = collider.type.substring(6, collider.type.length-2);
@@ -315,17 +346,6 @@ class Player {
                 this.moveSpeed = DEFAULT_SPEED;
                 resetWorld()
             }
-        }
-
-        /**
-         * Updates player each Frame
-         * @param {Object} block
-         */
-        this.update = function(player)
-        {
-            player.state = (Math.abs(player.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
-            player.state = player.jumped ? "jump" : player.state;
-            player.flip = Math.abs(player.xVel) > 0.01 ? player.xVel < 0 : player.flip;
         }
     }
 }
