@@ -182,6 +182,7 @@ class Player {
            if (collider.type.includes("coin/coin-") && collider.type != "coin/coin-anim-1")
            {
                 player.coins++;
+                delete world.blocks[collider.id];
                 socket.emit('removeBlock', world.id, collider.id);
                 return false;
            }
@@ -215,19 +216,27 @@ class Player {
            }
            // Bricks
            else if (collider.type.includes("brick/float-") && player.x + player.width - 0.1 > collider.x && player.x + 0.1 < collider.x + collider.width && player.yVel < 0 && !(collider.jumped)) {
-                socket.emit('updateBlock', world.id, collider.id, {"hop":true})
-                collider.hop = true;
-                var c = collider.id;
-                setTimeout(() => {
-                    socket.emit('updateBlock', world.id, c, {"hop":false})
-                    collider.hop = false;
-                }, 100);
+                if (player.power == "")
+                {
+                    socket.emit('updateBlock', world.id, collider.id, {"hop":true});
+                    collider.hop = true;
+                    var c = collider.id;
+                    setTimeout(() => {
+                        socket.emit('updateBlock', world.id, c, {"hop":false})
+                        collider.hop = false;
+                    }, 100);
+                }
+                else
+                {
+                    socket.emit('removeBlock', world.id, collider.id);
+                }
+                
                 return true;
            }
            // Goomba
-           else if (collider.type == "entity/goomba-1")
+           else if (collider.type == "entity/goomba-1" && collider.isSolid)
            {
-               if (player.yVel > 0.02) {
+               if (player.yVel > 0.02 || player.yVel == -BOUNCE_FORCE) {
                    var b = collider;
                    setTimeout(() => {
                        socket.emit('removeBlock', world.id, b.id);
@@ -257,6 +266,7 @@ class Player {
                }
                else
                {
+                   console.log(player.yVel)
                    player.die();
                }
                return false;

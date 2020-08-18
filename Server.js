@@ -135,6 +135,8 @@ io.on('connection', socket => {
      * @param {string} worldID - ID of the world to grab
      */
     socket.on('getWorld', (worldID) => {
+        if (typeof worldID != 'string')
+            return;
         if (worldID in worlds) {
             socket.emit("returnWorld", worlds[worldID])
         }
@@ -153,6 +155,10 @@ io.on('connection', socket => {
      * @param {string} worldID - ID of the world to reset
      */
     socket.on('resetWorld', (worldID) => {
+        if (typeof worldID != 'string')
+            return;
+        if (!(worldID in worlds))
+            return;
         delete worlds[worldID];
         worlds[worldID] = new World(worldID);
         worlds[worldID].download().then(function () {
@@ -171,6 +177,10 @@ io.on('connection', socket => {
      * @param {Object} properties - Properties of Block (Ex: {"isPhysics":true, "x":3})
      */
     socket.on('addBlock', (world, type, x, y, properties) => {
+        if (typeof world != 'string' || typeof type != 'string' || typeof x != 'number' || typeof y != 'number' || typeof properties != 'object')
+            return;
+        if (!(world in worlds))
+            return;
         var blockId = createID();
         worlds[world].blocks[blockId] = new Block(type, x, y, world, properties);
         worlds[world].blocks[blockId].id = blockId;
@@ -184,6 +194,8 @@ io.on('connection', socket => {
      * @param {Object} changes - Changes to the block (Ex: {"isPhysics":true, "x":3})
      */
     socket.on('updateBlock', (world, block, changes) => {
+        if (typeof world != 'string' || typeof block != 'string' || typeof changes != 'object')
+            return;
         for (var key in changes) {
             worlds[world].blocks[block][key] = changes[key];
         }
@@ -196,6 +208,8 @@ io.on('connection', socket => {
      * @param {string} block - Block ID
      */
     socket.on('removeBlock', (world, block) => {
+        if (typeof world != 'string' || typeof block != 'string')
+            return;
         delete worlds[world].blocks[block];
         io.emit('removeBlock', world, block);
     });
@@ -205,6 +219,8 @@ io.on('connection', socket => {
      * @param {Player} plr - Player to update
      */
     socket.on('updatePlayer', (plr) => {
+        if (typeof plr != 'object')
+            return;
         io.emit('updatePlayer', plr);
     });
 
@@ -261,6 +277,14 @@ function loop() {
         var world = worlds[key];
         phys.updateWorld(key, world);
     }
+}
+
+/**
+ * Checks if variable exists
+ */
+function varExists(v)
+{
+    return typeof v !== 'undefined' || v === null;
 }
 /* #endregion */
 
