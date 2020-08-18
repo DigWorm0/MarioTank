@@ -95,3 +95,34 @@ img {
     height: 100%;
     filter: blur(10px) brightness(50%);
 }
+
+.menu {
+    background-color:black;
+    color: white;
+    position: absolute;
+    margin: 0 auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    text-align: center;
+    display:none;
+}
+
+.menu a {
+    color:white;
+    text-decoration:none;
+    padding:12px;
+    margin-bottom:20px;
+}
+
+
+    .menu a:hover {
+        color:white;
+        text-decoration:none;
+        border-color:white;
+        border-width: 1px;
+        border-style:solid;
+        padding:10px;
+    }

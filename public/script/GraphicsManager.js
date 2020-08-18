@@ -6,6 +6,21 @@ var cameraX = 0;
 var cameraY = 0;
 var bgColor = "black";
 
+ctx.imageSmoothingEnabled = false;
+initAnim(coinAnim, {
+    "default":8
+}, 0.15);
+window.addEventListener('resize', function() {
+    var aspect = window.innerWidth/window.innerHeight;
+    var width = canvas.height * aspect;
+    width = Math.ceil(width/CELL_SIZE)*CELL_SIZE;
+    canvas.width = width;
+    ctx.imageSmoothingEnabled = false;
+    CELL_WIDTH = width / CELL_SIZE;
+});
+window.dispatchEvent(new Event('resize'));
+preloadSprites();
+
 /**
  * Draws a rectangle
  * @param {number} x
@@ -14,10 +29,27 @@ var bgColor = "black";
  * @param {number} height 
  * @param {string} color 
  */
-function DrawRect(x, y, width, height, color)
+function drawRect(x, y, width, height, color)
 {
     ctx.fillStyle = color;
-    ctx.fillRect(x*16 - cameraX, y*16 - cameraY, width*16, height*16)
+    ctx.fillRect(x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, width*CELL_SIZE, height*CELL_SIZE)
+}
+
+/**
+ * Draws a rectangle outline
+ * @param {number} x
+ * @param {number} y 
+ * @param {number} width 
+ * @param {number} height 
+ * @param {string} color 
+ */
+function drawRectOutline(x, y, width, height, color)
+{
+    ctx.beginPath();
+    ctx.lineWidth = "3";
+    ctx.strokeStyle = color;
+    ctx.rect(x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, width*CELL_SIZE, height*CELL_SIZE);
+    ctx.stroke();
 }
 
 /**
@@ -28,12 +60,12 @@ function DrawRect(x, y, width, height, color)
  * @param {number} y2 
  * @param {string} color 
  */
-function DrawLine(x1, y1, x2, y2, color)
+function drawLine(x1, y1, x2, y2, color)
 {
     ctx.strokeStyle = color;
     ctx.beginPath();
-    ctx.moveTo(x1*16 - cameraX, y1*16 - cameraY);
-    ctx.lineTo(x2*16 - cameraX, y2*16 - cameraY);
+    ctx.moveTo(x1*CELL_SIZE - cameraX, y1*CELL_SIZE - cameraY);
+    ctx.lineTo(x2*CELL_SIZE - cameraX, y2*CELL_SIZE - cameraY);
     ctx.stroke();
 }
 
@@ -45,11 +77,11 @@ function DrawLine(x1, y1, x2, y2, color)
  * @param {string} [font="8px PressStart2P"]
  * @param {string} [color="white"]
  */
-function DrawText(text, x, y, font="8px PressStart2P", color="white")
+function drawText(text, x, y, font=(CELL_SIZE / 2) + "px PressStart2P", color="white")
 {
     ctx.fillStyle = color;
     ctx.font = font;
-    ctx.fillText(text, x*16 - cameraX, y*16 - cameraY);
+    ctx.fillText(text, x - cameraX, y - cameraY);
 }
 
 /**
@@ -60,17 +92,17 @@ function DrawText(text, x, y, font="8px PressStart2P", color="white")
  * @param {number} [width=1]
  * @param {number} [height=1]
  */
-function DrawSprite(sprite, x, y, width=1, height=1)
+function drawSprite(sprite, x, y, width=1, height=1)
 {
     try {
         if (width == 1 && height == 1)
-            ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY);
+            ctx.drawImage(sprite, x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, sprite.width * SPRITE_SCALE, sprite.height * SPRITE_SCALE);
         else
-        ctx.drawImage(sprite, x*16 - cameraX, y*16 - cameraY, width*16, height*16);
+            ctx.drawImage(sprite, x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, width*CELL_SIZE, height*CELL_SIZE);
     }
     catch {
         try {
-            ctx.drawImage(GetSprite("null"), x*16 - cameraX, y*16 - cameraY, width*16, height*16)
+            ctx.drawImage(getSprite("null"), x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, width*CELL_SIZE, height*CELL_SIZE)
         }
         catch (e)
         {
@@ -83,7 +115,7 @@ function DrawSprite(sprite, x, y, width=1, height=1)
  * Gets the sprite of the given type
  * @param {string} type - Object type
  */
-function GetSprite(type)
+function getSprite(type)
 {
     if (!(sprites[type]))
     {
@@ -101,55 +133,69 @@ function GetSprite(type)
  * @param {number} [y=block.y] - Y position
  * @param {boolean} [stretch=true] - Stretches the sprite across the width and height
  */
-function DrawBlock(block, x=block.x, y=block.y, stretch=true)
+function drawBlock(block, x=block.x, y=block.y, stretch=true)
 {
+    var trueY = block.hop ? y - (1/8) : y;
     if (stretch)
     {
         if (block.useAnim)
-            DrawSprite(GetSprite(block.type + GetAnim(block)), x - 1, y - 1, block.width, block.height);
+            drawSprite(getSprite(block.type + getAnim(block)), x - 1, trueY - 1, block.width, block.height);
         else
-            DrawSprite(GetSprite(block.type), x - 1, y - 1, block.width, block.height);
+            drawSprite(getSprite(block.type), x - 1, trueY - 1, block.width, block.height);
     }
     else
     {
         if (block.useAnim)
-            DrawSprite(GetSprite(block.type + GetAnim(block)), x - 1, y - 1);
+            drawSprite(getSprite(block.type + getAnim(block)), x - 1, trueY - 1);
         else
-            DrawSprite(GetSprite(block.type), x - 1, y - 1);
+            drawSprite(getSprite(block.type), x - 1, trueY - 1);
     }
-    
 }
 
 /**
  * Draws all the blocks in a world
  * @param {Object} world - World Data
  */
-function DrawWorld(world)
+function drawWorld(world)
 {
-    for (id in world)
+    for (id in world.blocks)
     {
-        if (world[id].repeat)
+        if (world.blocks[id].isRepeat)
         {
-            for(var x = 0; x < world[id].width; x++)
+            for(var x = 0; x < world.blocks[id].width; x++)
             {
-                for(var y = 0; y < world[id].height; y++)
+                for(var y = 0; y < world.blocks[id].height; y++)
                 {
-                    DrawBlock(world[id], x + world[id].x, y + world[id].y, false);
+                    drawBlock(world.blocks[id], x + world.blocks[id].x, y + world.blocks[id].y, false);
                 }
             }
         }
         else
         {
-            DrawBlock(world[id]);
+            drawBlock(world.blocks[id]);
         }
     }
 }
 
-function DrawPlayers(players)
+/**
+ * Draws all the players
+ * @param {Object[]} players - Players to draw
+ */
+function drawPlayers(players)
 {
     for (var id in players)
     {
-        DrawBlock(players[id]);
+        ctx.textAlign = 'center';
+        if (id == player.id)
+        {
+            drawBlock(player, Math.round(player.x*CELL_SIZE)/CELL_SIZE, player.y, false);
+            drawText(player.name, ((player.x - 1) + (player.width / 2)) * CELL_SIZE, (player.y - 1.2)*CELL_SIZE, "7.5px PressStart2P");
+        }
+        else
+        {
+            drawBlock(players[id], Math.round(players[id].x*CELL_SIZE)/CELL_SIZE, players[id].y, false);
+            drawText(players[id].name, ((players[id].x - 1) + (players[id].width / 2)) * CELL_SIZE, (players[id].y - 1.2)*CELL_SIZE, "7.5px PressStart2P")
+        }
     }
 }
 
@@ -158,21 +204,23 @@ function DrawPlayers(players)
  * @param {Object} player - The Player
  * @param {Object} worldProperties - The World Properties
  */
-function DrawGUI(player, worldProperties)
+function drawGUI(player, world)
 {
+    ctx.textAlign = 'left';
     // Score
-    DrawText(player.name, 10 + cameraX, 20, "8px PressStart2P", "white");
-    DrawText(Pad(player.score, 6), 10 + cameraX, 30, "8px PressStart2P", "white");
+    drawText(player.name, (.625*CELL_SIZE) + cameraX, 1.25 * CELL_SIZE);
+    drawText(pad(player.score, 6), (.625*CELL_SIZE) + cameraX, 1.875 * CELL_SIZE);
     // Coins
-    DrawText("x" + Pad(player.coins, 2), 100 + cameraX, 30, "8px PressStart2P", "white");
-    //BounceAnimation(coinAnim);
-    DrawSprite(coinAnim.sprite, 90 + cameraX, 21);
+    drawText("x" + pad(player.coins, 2), (6.25*CELL_SIZE) + cameraX, 1.875 * CELL_SIZE);
+    drawSprite(getSprite("gui/coin-1" + getAnim(coinAnim)), 5.6 + cameraX / CELL_SIZE, 1.3); 
     // World
-    DrawText("WORLD", 150 + cameraX, 20, "8px PressStart2P", "white");
-    DrawText(worldProperties.displayName, 158 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("WORLD", (9.375*CELL_SIZE) + cameraX, 1.25 * CELL_SIZE);
+    drawText(world.displayName, (9.875*CELL_SIZE) + cameraX, 1.875*CELL_SIZE);
     // Time
-    DrawText("TIME", 220 + cameraX, 20, "8px PressStart2P", "white");
-    DrawText(Pad(worldProperties.time, 3), 225 + cameraX, 30, "8px PressStart2P", "white");
+    drawText("TIME", (13.75*CELL_SIZE) + cameraX, 1.25 * CELL_SIZE);
+    if (!(world.time))
+        world.time = 400;
+    drawText(pad(world.time, 3), (14.06*CELL_SIZE) + cameraX, 1.875*CELL_SIZE);
 }
 
 /**
@@ -182,7 +230,7 @@ function DrawGUI(player, worldProperties)
  * @returns {string} - Number represented as a string with 0s as a pad
  * @private
  */
-function Pad(num, size) {
+function pad(num, size) {
     var s = num + "";
     while (s.length < size)
         s = "0" + s;
@@ -193,9 +241,9 @@ function Pad(num, size) {
  * Clears the current canvas with bgColor
  * @param {string} [backgroundColor=bgColor] - Background Color
  */
-function ClearDraw(backgroundColor=bgColor)
+function clearDraw(backgroundColor=bgColor)
 {
-    DrawRect(cameraX / 16, cameraY / 16, CELL_WIDTH, CELL_HEIGHT, backgroundColor);
+    drawRect(cameraX / CELL_SIZE, cameraY / CELL_SIZE, CELL_WIDTH, CELL_HEIGHT, backgroundColor);
 }
 
 
@@ -204,10 +252,10 @@ function ClearDraw(backgroundColor=bgColor)
  * @param {number} x - Camera X Position
  * @param {number} y - Camera Y Position
  */
-function ScrollTo(x, y = 0)
+function scrollTo(x, y = 0)
 {
-    cameraX = (x - cameraX) * CAMERA_DAMPING + cameraX;
-    cameraY = (y - cameraY) * CAMERA_DAMPING + cameraY;
+    cameraX = Math.round((x - cameraX) * CAMERA_DAMPING + cameraX);
+    cameraY = Math.round((y - cameraY) * CAMERA_DAMPING + cameraY);
     if (cameraX < 0)
         cameraX = 0;
 }
@@ -218,7 +266,7 @@ function ScrollTo(x, y = 0)
  * @param {Object} animations - Block Animations
  * @param {number} speed - Speed of the Animation
  */
-function InitAnim(block, animations, speed=0.15)
+function initAnim(block, animations, speed=0.15)
 {
     block.useAnim = true;
     block.animations = animations;
@@ -233,7 +281,7 @@ function InitAnim(block, animations, speed=0.15)
  * Gets the directory of the current animation frame
  * @param {Object} block - Block to animate
  */
-function GetAnim(block)
+function getAnim(block)
 {
     if (!(block.state in block.animations))
         return "";
@@ -248,4 +296,73 @@ function GetAnim(block)
     if (block.flip)
         str += "_flip";
     return str;
+}
+
+/**
+ * Preloads sprites to reduce load flicker
+ */
+function preloadSprites()
+{
+    var spriteList = [
+        'entity/player-1/climb-1',
+        'entity/player-1/climb-1_flip',
+        'entity/player-1/default-1',
+        'entity/player-1/default-1_flip',
+        'entity/player-1/fire_climb-1',
+        'entity/player-1/fire_climb-1_flip',
+        'entity/player-1/fire_default-1',
+        'entity/player-1/fire_default-1_flip',
+        'entity/player-1/fire_jump-1',
+        'entity/player-1/fire_jump-1_flip',
+        'entity/player-1/fire_walk-1',
+        'entity/player-1/fire_walk-1_flip',
+        'entity/player-1/fire_walk-2',
+        'entity/player-1/fire_walk-2_flip',
+        'entity/player-1/fire_walk-3',
+        'entity/player-1/fire_walk-3_flip',
+        'entity/player-1/jump-1',
+        'entity/player-1/jump-1_flip',
+        'entity/player-1/sanic_default-1',
+        'entity/player-1/sanic_default-1_flip',
+        'entity/player-1/sanic_jump-1',
+        'entity/player-1/sanic_jump-1_flip',
+        'entity/player-1/sanic_walk-1',
+        'entity/player-1/sanic_walk-1_flip',
+        'entity/player-1/sanic_walk-2',
+        'entity/player-1/sanic_walk-2_flip',
+        'entity/player-1/sanic_walk-3',
+        'entity/player-1/sanic_walk-3_flip',
+        'entity/player-1/shroom_climb-1',
+        'entity/player-1/shroom_climb-1_flip',
+        'entity/player-1/shroom_default-1',
+        'entity/player-1/shroom_default-1_flip',
+        'entity/player-1/shroom_jump-1',
+        'entity/player-1/shroom_jump-1_flip',
+        'entity/player-1/shroom_walk-1',
+        'entity/player-1/shroom_walk-1_flip',
+        'entity/player-1/shroom_walk-2',
+        'entity/player-1/shroom_walk-2_flip',
+        'entity/player-1/shroom_walk-3',
+        'entity/player-1/shroom_walk-3_flip',
+        'entity/player-1/tank_default-1',
+        'entity/player-1/tank_default-1_flip',
+        'entity/player-1/tank_jump-1',
+        'entity/player-1/tank_jump-1_flip',
+        'entity/player-1/tank_walk-1',
+        'entity/player-1/tank_walk-1_flip',
+        'entity/player-1/tank_walk-2',
+        'entity/player-1/tank_walk-2_flip',
+        'entity/player-1/tank_walk-3',
+        'entity/player-1/tank_walk-3_flip',
+        'entity/player-1/walk-1',
+        'entity/player-1/walk-1_flip',
+        'entity/player-1/walk-2',
+        'entity/player-1/walk-2_flip',
+        'entity/player-1/walk-3',
+        'entity/player-1/walk-3_flip',
+    ];
+
+    spriteList.forEach((val, index) => {
+        getSprite(val);
+    });
 }

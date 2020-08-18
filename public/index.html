@@ -7,7 +7,7 @@
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
-    <body onload="Start()">
+    <body onload="socket.emit('getWorld', DEFAULT_WORLD);">
         <div class="world-edit">
             <h2>Editor</h2>
             <b>Type:</b><input id="blockType" type="text" placeholder="type" onchange="editBlock()" class="edit" /><br />
@@ -31,16 +31,25 @@
             <b>Display Name:</b><input id="displayName" type="text" placeholder="type" onchange="editWorld()"/><br />
             <b>Autoscroll:</b><input id="autoScroll" type="checkbox" onchange="editWorld()"/><br />
         </div>
-        <canvas id="canvas" width="448" height="240"></canvas>
+        <canvas id="canvas" width="896" height="480"></canvas>
+        <div class="menu" id="pauseMenu">
+            <h1>Options</h1>
+            <a href="/">Change Name</a><br /><br />
+            <a href="#" onclick="pauseTp();">Teleport</a><br /><br />
+            <a href="#" onclick="resetWorldData();">Reset World</a><br /><br />
+            <a href="#" onclick="resetPlayer();">Reset Player</a>
+        </div>
+        <div class="menu" id="tpMenu">
+            <h1>Teleport</h1>
+        </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="/script/settings.js"></script>
-        <script src="/script/WorldManager.js"></script>
+        <script src="/script/PauseMenu.js"></script>
         <script src="/script/GraphicsManager.js"></script>
-        <script src="/script/BlockDefaults.js"></script>
         <script src="/script/ControlManager.js"></script>
+        <script src="/script/PowerUps.js"></script>
+        <script src="/script/PlayerPhysics.js"></script>
         <script src="/script/Network.js"></script>
-        <script src="/script/PlayerManager.js"></script>
-        <script src="/script/PhysicsManager.js"></script>
         <script src="/script/Main.js"></script>
     </body>
 </html>
