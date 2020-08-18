@@ -33,11 +33,11 @@ function applyPlayerVectors(player, world)
     }
     
     if (player.onground && Controls.sprint)
-        player.xVel += Controls.horizontal * PLAYER_SPRINT_SPEED;
+        player.xVel += Controls.horizontal * (player.moveSpeed + 0.0075);
     else if (player.onground)
-        player.xVel += Controls.horizontal * PLAYER_SPEED;
+        player.xVel += Controls.horizontal * (player.moveSpeed + 0.0025);
     else
-        player.xVel += Controls.horizontal * PLAYER_AIR_SPEED;
+        player.xVel += Controls.horizontal * player.moveSpeed;
     
     if (!player.fired && Controls.fire && player.power in powerups)
     {
@@ -160,14 +160,15 @@ class Player {
         this.height     = 1;
         this.width      = 0.8;
         this.coins      = 0;
-        this.score      = 0; // TODO Save game
+        this.moveSpeed  = DEFAULT_SPEED;
+        this.score      = 0; // TODO Save Data
         this.name       = (new URLSearchParams(window.location.search)).get('name');
         this.id         = id;
         this.onground   = false;
         this.jumping    = false;
         this.jumped     = false;
         this.fired      = false;
-        this.hop        = false
+        this.hop        = false;
 
         /**
         * Runs if there is a collision between player and collider
@@ -270,6 +271,7 @@ class Player {
                     player.y += player.height-power.height;
                     player.height = power.height;
                     player.width = power.width;
+                    player.moveSpeed = power.speed;
                     socket.emit('removeBlock', world.id, collider.id);
                     return false;
                 }
@@ -289,6 +291,7 @@ class Player {
                 this.height = 1;
                 this.width = 0.8;
                 this.invinsible = true;
+                this.moveSpeed = DEFAULT_SPEED;
                 setTimeout(() => {
                     this.invinsible = false;
                 }, 5000)
@@ -299,6 +302,7 @@ class Player {
                 this.height = 1;
                 this.width = 0.8;
                 this.power = "";
+                this.moveSpeed = DEFAULT_SPEED;
                 resetWorld()
             }
         }

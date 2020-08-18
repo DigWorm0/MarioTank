@@ -19,6 +19,7 @@ window.addEventListener('resize', function() {
     CELL_WIDTH = width / CELL_SIZE;
 });
 window.dispatchEvent(new Event('resize'));
+preloadSprites();
 
 /**
  * Draws a rectangle
@@ -270,4 +271,73 @@ function getAnim(block)
     if (block.flip)
         str += "_flip";
     return str;
+}
+
+/**
+ * Preloads sprites to reduce load flicker
+ */
+function preloadSprites()
+{
+    var spriteList = [
+        'entity/player-1/climb-1',
+        'entity/player-1/climb-1_flip',
+        'entity/player-1/default-1',
+        'entity/player-1/default-1_flip',
+        'entity/player-1/fire_climb-1',
+        'entity/player-1/fire_climb-1_flip',
+        'entity/player-1/fire_default-1',
+        'entity/player-1/fire_default-1_flip',
+        'entity/player-1/fire_jump-1',
+        'entity/player-1/fire_jump-1_flip',
+        'entity/player-1/fire_walk-1',
+        'entity/player-1/fire_walk-1_flip',
+        'entity/player-1/fire_walk-2',
+        'entity/player-1/fire_walk-2_flip',
+        'entity/player-1/fire_walk-3',
+        'entity/player-1/fire_walk-3_flip',
+        'entity/player-1/jump-1',
+        'entity/player-1/jump-1_flip',
+        'entity/player-1/sanic_default-1',
+        'entity/player-1/sanic_default-1_flip',
+        'entity/player-1/sanic_jump-1',
+        'entity/player-1/sanic_jump-1_flip',
+        'entity/player-1/sanic_walk-1',
+        'entity/player-1/sanic_walk-1_flip',
+        'entity/player-1/sanic_walk-2',
+        'entity/player-1/sanic_walk-2_flip',
+        'entity/player-1/sanic_walk-3',
+        'entity/player-1/sanic_walk-3_flip',
+        'entity/player-1/shroom_climb-1',
+        'entity/player-1/shroom_climb-1_flip',
+        'entity/player-1/shroom_default-1',
+        'entity/player-1/shroom_default-1_flip',
+        'entity/player-1/shroom_jump-1',
+        'entity/player-1/shroom_jump-1_flip',
+        'entity/player-1/shroom_walk-1',
+        'entity/player-1/shroom_walk-1_flip',
+        'entity/player-1/shroom_walk-2',
+        'entity/player-1/shroom_walk-2_flip',
+        'entity/player-1/shroom_walk-3',
+        'entity/player-1/shroom_walk-3_flip',
+        'entity/player-1/tank_default-1',
+        'entity/player-1/tank_default-1_flip',
+        'entity/player-1/tank_jump-1',
+        'entity/player-1/tank_jump-1_flip',
+        'entity/player-1/tank_walk-1',
+        'entity/player-1/tank_walk-1_flip',
+        'entity/player-1/tank_walk-2',
+        'entity/player-1/tank_walk-2_flip',
+        'entity/player-1/tank_walk-3',
+        'entity/player-1/tank_walk-3_flip',
+        'entity/player-1/walk-1',
+        'entity/player-1/walk-1_flip',
+        'entity/player-1/walk-2',
+        'entity/player-1/walk-2_flip',
+        'entity/player-1/walk-3',
+        'entity/player-1/walk-3_flip',
+    ];
+
+    spriteList.forEach((val, index) => {
+        getSprite(val);
+    });
 }

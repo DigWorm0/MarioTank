@@ -7,9 +7,10 @@ class PowerUp
         this.height     = height;
         this.fire       = fire;
         this.props      = props;
+        this.speed      = DEFAULT_SPEED;
         
         for (var property in props) {
-            this[property] = properties[property];
+            this[property] = props[property];
         }
     }
 }
@@ -17,7 +18,7 @@ class PowerUp
 var powerups = {
     "shroom":new PowerUp("shroom", 0.8, 2, () => {}),
     "fire":new PowerUp("fire", 0.8, 2, () => {}),
-    "tank":new PowerUp("tank", 4, 2, () => {
+    "tank":new PowerUp("tank", 3.9, 2, () => {
         var offset = player.flip ? 0 : player.width;
         socket.emit("addBlock", world.id, "tank/bullet-1", player.x + offset, player.y + player.height * 0.21875, {
             "isSolid":false,
@@ -27,5 +28,5 @@ var powerups = {
             "direction":player.flip
         })
     }),
-    "sanic":new PowerUp("sanic", 2, 2, () => {})
+    "sanic":new PowerUp("sanic", 1.9, 2, () => {}, { "speed":0.02 })
 };

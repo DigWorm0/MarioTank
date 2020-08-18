@@ -63,6 +63,11 @@ document.addEventListener('keydown', function(event) {
             KeyboardControls[control] = true;
         }
     }
+
+    if (event.keyCode == 27)
+    {
+        togglePause();
+    }
 });
 document.addEventListener('keyup', function(event) {
     for (const control in CONTROL_KEY_CODES)

@@ -35,8 +35,7 @@ class World {
     download() {
         var world = this;
         const promise = new Promise(function (resolve, reject) {
-            var url = "https://supermario.wtf/worldData/" + world.id + ".json";
-            console.log(url);
+            var url = "http://localhost:8080/worldData/" + world.id + ".json"; // https://supermario.wtf/worldData/
             request({
                 url: url,
                 json: true
@@ -150,6 +149,20 @@ io.on('connection', socket => {
     });
 
     /**
+     * Resets the current world
+     * @param {string} worldID - ID of the world to reset
+     */
+    socket.on('resetWorld', (worldID) => {
+        delete worlds[worldID];
+        worlds[worldID] = new World(worldID);
+        worlds[worldID].download().then(function () {
+            io.emit("resetWorld", worlds[worldID])
+        }, function () {
+            io.emit("resetWorld", worlds[worldID])
+        });
+    });
+
+    /**
      * Adds a block into the world
      * @param {string} world - World ID of Block
      * @param {string} type - Type of block
@@ -255,8 +268,12 @@ function loop() {
 phys.load(io, worlds);
 
 app.get('/', (req, res) => {
-    if (req.query.name)
-        res.sendFile(__dirname + '/public/index.html');
+    if (req.query.name) {
+        if (req.query.name.length <= 12)
+            res.sendFile(__dirname + '/public/index.html');
+        else
+            res.sendFile(__dirname + '/public/start.html');
+    }
     else
         res.sendFile(__dirname + '/public/start.html');
 })

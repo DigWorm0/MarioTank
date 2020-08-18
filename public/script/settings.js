@@ -6,9 +6,7 @@ const Y_MOTION_DAMPING = .999;
 const CELL_SIZE = 32;
 
 // Physics
-const PLAYER_SPEED = .0125;
-const PLAYER_SPRINT_SPEED = .0175;
-const PLAYER_AIR_SPEED = .01;
+const DEFAULT_SPEED = .01;
 const GRAVITY = .0125;
 const JUMP_FORCE = .25; // .375
 const CONTINUOUS_JUMP_FORCE = .023;

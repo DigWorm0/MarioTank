@@ -67,7 +67,22 @@ socket.on('connect', () => {
             start();
         }
         console.log("Loaded world " + worldData.id)
-    })
+    });
+
+    /**
+     * Returns a World
+     * @param {World} world - World to load
+     */
+    socket.on('resetWorld', function(worldData) {
+        if (worldData.id == world.id)
+        {
+            world = worldData;
+            if (!blackDisplay)
+                bgColor = world.bgColor;
+            resetWorld();
+            console.log("Reset world " + worldData.id)
+        }
+    });
     
     /**
      * Updates the data from a player
