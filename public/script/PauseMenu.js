@@ -55,3 +55,11 @@ function resetWorldData()
     paused = true;
     togglePause();
 }
+
+function resetPlayer()
+{
+    player.die(true);
+
+    paused = true;
+    togglePause();
+}

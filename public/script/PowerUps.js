@@ -16,8 +16,8 @@ class PowerUp
 }
 
 var powerups = {
-    "shroom":new PowerUp("shroom", 0.8, 2, () => {}),
-    "fire":new PowerUp("fire", 0.8, 2, () => {}),
+    "shroom":new PowerUp("shroom", 0.9, 2, () => {}),
+    "fire":new PowerUp("fire", 0.9, 2, () => {}),
     "tank":new PowerUp("tank", 3.9, 2, () => {
         var offset = player.flip ? 0 : player.width;
         socket.emit("addBlock", world.id, "tank/bullet-1", player.x + offset, player.y + player.height * 0.21875, {
@@ -27,6 +27,6 @@ var powerups = {
             "isRepeat":false,
             "direction":player.flip
         })
-    }),
+    }, { "speed":0.005 }),
     "sanic":new PowerUp("sanic", 1.9, 2, () => {}, { "speed":0.02 })
 };
