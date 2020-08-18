@@ -4,7 +4,7 @@ const request = require("request")
 const express = require('express');
 const app = express()
 const server = require('http').createServer(app);
-const io = require('socket.io')(server, {});
+const io = require('socket.io')(server, {origins: '*:*'});
 const phys = require('./WorldPhysics');
 var port = process.env.PORT || 3000;
 
@@ -35,7 +35,7 @@ class World {
     download() {
         var world = this;
         const promise = new Promise(function (resolve, reject) {
-            var url = "http://localhost:8080/worldData/" + world.id + ".json"; // https://supermario.wtf/worldData/
+            var url = "https://supermario.wtf/worldData/" + world.id + ".json";
             request({
                 url: url,
                 json: true
