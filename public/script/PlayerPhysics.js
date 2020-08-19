@@ -157,7 +157,7 @@ function playerUpdate()
                 }
                 else
                 {
-                    // TODO Break Particles
+                    socket.emit('addBlock', world.id, 'brick/debris-1',block.x, block.y, {"isSolid":false});
                     socket.emit('removeBlock', world.id, block.id);
                 }
             }
@@ -234,6 +234,27 @@ function playerUpdate()
             else if (around)
             {
                 player.die();
+            }
+        }
+
+        // Pipes
+        if (block.type == "pipe/up-1")
+        {
+            var bottom = _boxCollider(player.x + 0.4, player.y + player.height + 0.01, player.width - 0.8, 0.01, block.x, block.y, block.width, block.height);
+
+            if (bottom && Controls.down && block.prop != "" && block.prop != null && block.prop != undefined)
+            {
+                socket.emit("getWorld", block.prop);
+            }
+        }
+        // Pipes
+        if (block.type == "pipe/left-1")
+        {
+            var right = _boxCollider(player.x + player.width, player.y + 0.4, 0.01, player.height - 0.8, block.x, block.y, block.width, block.height);
+
+            if (right && Controls.right && block.prop != "" && block.prop != null && block.prop != undefined)
+            {
+                socket.emit("getWorld", block.prop);
             }
         }
     }

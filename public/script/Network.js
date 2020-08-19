@@ -59,8 +59,22 @@ socket.on('connect', () => {
      * @param {World} world - World to load
      */
     socket.on('returnWorld', function(worldData) {
+        if (world)
+        {
+            for (var key in worldData.blocks)
+            {
+                var block = worldData.blocks[key];
+                if (block.type == "spawn/" + world.id)
+                {
+                    player.x = block.x;
+                    player.y = block.y - player.height;
+                    console.log("spawn/" + world.id)
+                }
+            }
+        }
         world = worldData;
         player.world = world.id;
+        cameraX = 0;
         if (!blackDisplay)
             bgColor = world.bgColor;
         if (waitForWorld) {

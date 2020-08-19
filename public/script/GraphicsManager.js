@@ -337,6 +337,12 @@ function preloadSprites()
         'entity/player-1/walk-2_flip',
         'entity/player-1/walk-3',
         'entity/player-1/walk-3_flip',
+        'coin/coin-anim-1/default-1',
+        'coin/coin-anim-1/default-2',
+        'coin/coin-anim-1/default-3',
+        'coin/coin-anim-1/default-4',
+        'coin/coin-anim-1/default-5',
+        'coin/coin-anim-1/default-6'
     ];
 
     spriteList.forEach((val, index) => {

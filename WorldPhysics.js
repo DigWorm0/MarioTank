@@ -2,10 +2,12 @@
  * Module Exports
  * @param {Object} io - Socket.io
  */
-module.exports.load = function(io, worlds)
+module.exports.load = function(io, worlds, blockConstructor)
 {
     this.io = io;
     this.worlds = worlds;
+    this.Block = blockConstructor;
+
 
     module.exports.blockInits = {
         "coin/coin-anim-1":(entity) => {
@@ -42,7 +44,38 @@ module.exports.load = function(io, worlds)
             _initAnim(entity, {
                 "default":4
             });
-            console.log("a")
+        },
+        "brick/debris-1":(entity) => {
+            var debrisA = new this.Block("brick/debrisl-1", entity.x, entity.y, entity.world, {isPhysics: true, isGravity:true, isSolid:false, xVel: -.2, yVel:-.35});
+            var debrisB = new this.Block("brick/debrisl-1", entity.x, entity.y, entity.world, {isPhysics: true, isGravity:true, isSolid:false, xVel: -.2, yVel:-.15});
+            var debrisC = new this.Block("brick/debrisr-1", entity.x, entity.y, entity.world, {isPhysics: true, isGravity:true, isSolid:false, xVel:  .2, yVel:-.35});
+            var debrisD = new this.Block("brick/debrisr-1", entity.x, entity.y, entity.world, {isPhysics: true, isGravity:true, isSolid:false, xVel:  .2, yVel:-.15});
+            worlds[entity.world].blocks[debrisA.id] = debrisA;
+            worlds[entity.world].blocks[debrisB.id] = debrisB;
+            worlds[entity.world].blocks[debrisC.id] = debrisC;
+            worlds[entity.world].blocks[debrisD.id] = debrisD;
+            this.io.emit("addBlock", entity.world, debrisA);
+            this.io.emit("addBlock", entity.world, debrisC);
+            this.io.emit("addBlock", entity.world, debrisD);
+            this.io.emit("addBlock", entity.world, debrisB);
+            var a = debrisA.id;
+            var b = debrisB.id;
+            var c = debrisC.id;
+            var d = debrisD.id;
+            var e = entity.id;
+            var w = entity.world;
+            setTimeout(() => {
+                this.io.emit("removeBlock", w, a);
+                this.io.emit("removeBlock", w, b);
+                this.io.emit("removeBlock", w, c);
+                this.io.emit("removeBlock", w, d);
+                this.io.emit("removeBlock", w, e);
+                delete this.worlds[w].blocks[a];
+                delete this.worlds[w].blocks[b];
+                delete this.worlds[w].blocks[c];
+                delete this.worlds[w].blocks[d];
+                delete this.worlds[w].blocks[e];
+            }, 2000);
         }
     };
     module.exports.blockUpdates = {
@@ -62,6 +95,10 @@ module.exports.load = function(io, worlds)
             var collider = _findCollision(entity.x, entity.y, entity, this.worlds[entity.world], entity.width, entity.height);
             if (collider)
             {
+                var b = new this.Block('brick/debris-1',collider.x, collider.y, collider.world, {"isSolid":false});
+                this.worlds[collider.world].blocks[b.id] = b;
+                io.emit("addBlock", collider.world, b);
+
                 io.emit("removeBlock", entity.world, entity.id)
                 delete this.worlds[entity.world].blocks[entity.id];
 
@@ -100,9 +137,11 @@ module.exports.load = function(io, worlds)
         if (block.isGravity)
             block.yVel += .025;
         block.y += block.yVel;
-        _correctYMovement(block, world);
+        if (block.isSolid)
+            _correctYMovement(block, world);
         block.x += block.xVel;
-        _correctXMovement(block, world);
+        if (block.isSolid)
+            _correctXMovement(block, world);
         block.xVel *= .9;
         block.yVel *= .999;
 

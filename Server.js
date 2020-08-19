@@ -196,6 +196,10 @@ io.on('connection', socket => {
     socket.on('updateBlock', (world, block, changes) => {
         if (typeof world != 'string' || typeof block != 'string' || typeof changes != 'object')
             return;
+        if (!(world in worlds))
+            return;
+        if (!(block in worlds[world].blocks))
+            return;
         for (var key in changes) {
             worlds[world].blocks[block][key] = changes[key];
         }
@@ -289,7 +293,7 @@ function varExists(v)
 /* #endregion */
 
 /* #region  Http Server */
-phys.load(io, worlds);
+phys.load(io, worlds, Block);
 
 app.get('/', (req, res) => {
     if (req.query.name) {
