@@ -90,3 +90,13 @@ canvas {
         border-style:solid;
         padding:10px;
     }
+
+.bottom-link {
+    width:200px;
+    position: absolute;
+    bottom:20px;
+    right:20px;
+    color:white;
+    text-align: center;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}

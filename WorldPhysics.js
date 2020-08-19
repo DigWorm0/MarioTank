@@ -25,6 +25,18 @@ module.exports.load = function(io, worlds, blockConstructor)
                 "used":1
             }, 0.12);
         },
+        "question/block-2":(entity) => {
+            _initAnim(entity, {
+                "default":6,
+                "used":1
+            }, 0.12);
+        },
+        "brick/wall-2":(entity) => {
+            _initAnim(entity, {
+                "default":1,
+                "used":1
+            }, 0);
+        },
         "entity/goomba-1":(entity) => {
             _initAnim(entity, {
                 "default":2,

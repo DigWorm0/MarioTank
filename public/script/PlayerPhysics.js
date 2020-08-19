@@ -140,12 +140,35 @@ function playerUpdate()
     {
         var block = world.blocks[id];
         // Bricks
-        if (block.type.includes("brick/float-"))
+        if (block.type.includes("brick/float-") || block.type.includes("brick/wall-"))
         {
             var top = _boxCollider(player.x + 0.01, player.y - 0.01, player.width - 0.02, 0.01, block.x, block.y, block.width, block.height);
-            if (top)
+            if (top && block.state != "used")
             {
-                if (player.power == "")
+                if (block.prop != "")
+                {
+                    if (block.prop == "powerup") {
+                        var keys = Object.keys(powerups);
+                        var prop = "power/" + keys[Math.floor(Math.random() * keys.length)] + "-1";
+                        socket.emit('addBlock', world.id, prop, block.x, block.y-1, {"isSolid":false});
+                        socket.emit('updateBlock', world.id, block.id, {"hop":true, "state":"used"});
+                    }
+                    else
+                    {
+                        socket.emit('addBlock', world.id, block.prop, block.x, block.y-1, {"isSolid":false});
+                        player.coins += 1;
+                        socket.emit('updateBlock', world.id, block.id, {"hop":true, "state":"used"});
+                    }
+
+                    block.state = "used";
+                    block.hop = true;
+                    let d = block.id;
+                    setTimeout((id) => {
+                        socket.emit('updateBlock', world.id, id, {"hop":false})
+                        world.blocks[id].hop = false;
+                    }, 100, d);
+                }
+                else if (player.power == "")
                 {
                     socket.emit('updateBlock', world.id, block.id, {"hop":true});
                     block.hop = true;
@@ -292,7 +315,7 @@ class Player {
         this.y          = null;
         this.xVel       = 0;
         this.yVel       = 0;
-        this.height     = 1;
+        this.height     = 0.9375;
         this.width      = 0.8;
         this.coins      = 0;
         this.moveSpeed  = DEFAULT_SPEED;
@@ -306,7 +329,7 @@ class Player {
         this.hop        = false;
         this.world      = "1-1";
         this.xOffset    = 0;
-        this.yOffset    = 0;
+        this.yOffset    = -0.0625;
 
         /**
         * Runs if there is a collision between player and collider
@@ -347,8 +370,10 @@ class Player {
             if (this.power != "" && !force)
             {
                 this.power = "";
-                this.height = 1;
+                this.height = 0.9375;
                 this.width = 0.8;
+                this.yOffset = -0.0625;
+                this.xOffset = 0;
                 this.invinsible = true;
                 this.moveSpeed = DEFAULT_SPEED;
                 setTimeout(() => {
@@ -358,8 +383,10 @@ class Player {
             }
             else if (!this.invinsible || force)
             {
-                this.height = 1;
+                this.height = 0.9375;
                 this.width = 0.8;
+                this.yOffset = -0.0625;
+                this.xOffset = 0;
                 this.power = "";
                 this.moveSpeed = DEFAULT_SPEED;
                 resetWorld()

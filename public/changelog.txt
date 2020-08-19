@@ -1,0 +1,50 @@
+[Note: Almost every day will include many smaller bug fixes. Only bigger bug fixes are listed]
+
+8/18/2020
+- Fixed Pipe issues
+- Added hitbox offset
+- Added brick particles/debris
+- Finished 1-2
+
+8/17/2020
+- Added options menu
+- Created Heroku servers
+
+8/16/2020
+- Disconnect recovery
+- Fixed display resolution issued
+- Redid power up system
+- Added Sanic
+- Added Tanks
+
+8/15/2020
+- Redid the entire block storing system
+- Added multiplayer support
+- Added JSDoc for documentation
+
+8/5/2020
+- Added gamepad support
+- Added fire power
+- Gave goombas gravity
+
+8/2/2020
+- Added a death screen
+- Started world 1-2
+- Created end animation
+
+8/1/2020
+- Created an organizational format for sprites (category/prefix_name-colorpallete_suffix.png)
+- Goomba fixes
+- Added "props" to world objects
+- Created top GUI
+- Added functionality to pipes
+
+7/31/2020
+- Created world editing software
+- Redid world and entity rendering
+- Added goombas and question blocks
+
+7/30/2020
+- Created world 1-1
+- Ported code to Git
+- Fixed Animation Bugs
