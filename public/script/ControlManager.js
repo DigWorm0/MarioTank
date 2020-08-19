@@ -191,7 +191,7 @@ function downloadMap()
         if (block.width != 1)
             prop.width = block.width;
         if (block.isRepeat != false)
-            prop.repeat = block.isRepeat;
+            prop.isRepeat = block.isRepeat;
         if (block.isSolid != true)
             prop.isSolid = block.isSolid;
         if (block.prop != "")

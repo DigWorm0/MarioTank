@@ -1,4 +1,4 @@
-var socket = io('https://supermario.wtf/');
+var socket = io();
 var players = {};
 var player;
 var world;
