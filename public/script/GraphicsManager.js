@@ -133,7 +133,7 @@ function getSprite(type)
  * @param {number} [y=block.y] - Y position
  * @param {boolean} [stretch=true] - Stretches the sprite across the width and height
  */
-function drawBlock(block, x=block.x, y=block.y, stretch=true)
+function drawBlock(block, x=block.x+block.xOffset, y=block.y+block.yOffset, stretch=true)
 {
     var trueY = block.hop ? y - (1/8) : y;
     if (stretch)
@@ -160,19 +160,20 @@ function drawWorld(world)
 {
     for (id in world.blocks)
     {
-        if (world.blocks[id].isRepeat)
+        var block = world.blocks[id];
+        if (block.isRepeat)
         {
-            for(var x = 0; x < world.blocks[id].width; x++)
+            for(var x = 0; x < block.width; x++)
             {
-                for(var y = 0; y < world.blocks[id].height; y++)
+                for(var y = 0; y < block.height; y++)
                 {
-                    drawBlock(world.blocks[id], x + world.blocks[id].x, y + world.blocks[id].y, false);
+                    drawBlock(block, x + block.x + block.xOffset, y + block.y + block.yOffset, false);
                 }
             }
         }
         else
         {
-            drawBlock(world.blocks[id]);
+            drawBlock(block);
         }
     }
 }

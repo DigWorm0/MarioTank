@@ -15,9 +15,12 @@
             <b>Y:</b><input id="blockY" type="number" placeholder="Y" onchange="editBlock()" class="edit" /><br />
             <b>Height:</b><input id="blockH" type="number" placeholder="Height" onchange="editBlock()" class="edit" /><br />
             <b>Width:</b><input id="blockW" type="number" placeholder="Width" onchange="editBlock()" class="edit" /><br />
+            <b>X Offset:</b><input id="xOffset" type="number" placeholder="X Offset" onchange="editBlock()" class="edit" step="0.1" /><br />
+            <b>Y Offset:</b><input id="yOffset" type="number" placeholder="Y Offset" onchange="editBlock()" class="edit" step="0.1" /><br />
             <b>Prop:</b><input id="blockProp" type="text" placeholder="Prop" onchange="editBlock()" class="edit" /><br />
             <b>Repeat:</b><input id="blockRepeat" type="checkbox" onchange="editBlock()" class="edit" /><br />
             <b>Solid:</b><input id="blockSolid" type="checkbox" onchange="editBlock()" class="edit" /><br />
+            <b>Unbreakable:</b><input id="blockBreak" type="checkbox" onchange="editBlock()" class="edit" /><br />
             <button type="button" onclick="newBlock()" class="edit" >Add</button>
             <button type="button" onclick="delBlock()" class="edit" >Delete</button>
             <button type="button" onclick="downloadMap()" class="edit" >Download</button>

@@ -23,7 +23,30 @@ module.exports.load = function(io, worlds)
                 "used":1
             }, 0.12);
         },
+        "entity/koopa-1":(entity) => {
+            _initAnim(entity, {
+                "default":2
+            });
+            entity.isPhysics = true;
+            entity.isGravity = true;
+        },
+        "entity/koopa-2":(entity) => {
+            _initAnim(entity, {
+                "default":2
+            });
+            entity.isPhysics = true;
+            entity.isGravity = true;
+        },
         "entity/goomba-1":(entity) => {
+            _initAnim(entity, {
+                "default":2,
+                "squash":1,
+                "flip":1
+            });
+            entity.isPhysics = true;
+            entity.isGravity = true;
+        },
+        "entity/goomba-2":(entity) => {
             _initAnim(entity, {
                 "default":2,
                 "squash":1,
@@ -44,7 +67,13 @@ module.exports.load = function(io, worlds)
             entity.y -= 0.2;
             this.io.emit("updateBlock", entity.world, entity.id, {"y":entity.y});
         },
+        "entity/koopa-1":(entity) => {
+            _bounceAround(entity, this.worlds[entity.world]);
+        },
         "entity/goomba-1":(entity) => {
+            _bounceAround(entity, this.worlds[entity.world]);
+        },
+        "entity/goomba-2":(entity) => {
             _bounceAround(entity, this.worlds[entity.world]);
         },
         "tank/bullet-1":(entity) => {

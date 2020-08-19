@@ -106,9 +106,12 @@ function editBlock()
             "y":parseFloat(document.getElementById("blockY").value),
             "width":parseInt(document.getElementById("blockW").value),
             "height":parseInt(document.getElementById("blockH").value),
+            "xOffset":parseFloat(document.getElementById("xOffset").value),
+            "yOffset":parseFloat(document.getElementById("yOffset").value),
             "prop":document.getElementById("blockProp").value,
             "isRepeat":document.getElementById("blockRepeat").checked,
-            "isSolid":document.getElementById("blockSolid").checked
+            "isSolid":document.getElementById("blockSolid").checked,
+            "isUnbreakable":document.getElementById("blockBreak").checked
         })
         document.getElementById("blockImg").src = "/sprites/" + selectedBlock.type + ".png";
     }
@@ -121,9 +124,12 @@ function updateEditor(block)
     document.getElementById("blockY").value = block.y;
     document.getElementById("blockH").value = block.height;
     document.getElementById("blockW").value = block.width;
+    document.getElementById("xOffset").value = block.xOffset;
+    document.getElementById("yOffset").value = block.yOffset;
     document.getElementById("blockProp").value = block.prop;
     document.getElementById("blockRepeat").checked = block.isRepeat;
     document.getElementById("blockSolid").checked = block.isSolid;
+    document.getElementById("blockBreak").checked = block.isUnbreakable;
 
     document.getElementById("blockImg").src = "/sprites/" + block.type + ".png"
     if (block.width == 1 && block.height == 1) {
@@ -160,10 +166,16 @@ function dupBlock()
             prop.height = selectedBlock.height;
         if (selectedBlock.width != 1)
             prop.width = selectedBlock.width;
+        if (selectedBlock.xOffset != 0)
+            prop.xOffset = selectedBlock.xOffset;
+        if (selectedBlock.yOffset != 0)
+            prop.yOffset = selectedBlock.yOffset;
         if (selectedBlock.repeat != false)
-            prop.noRepeat = selectedBlock.isRepeat;
+            prop.isRepeat = selectedBlock.isRepeat;
         if (selectedBlock.solid != true)
-            prop.solid = selectedBlock.isSolid;
+            prop.isSolid = selectedBlock.isSolid;
+        if (selectedBlock.isUnbreakable != false)
+            prop.isUnbreakable = selectedBlock.isUnbreakable;
         if (selectedBlock.prop != "")
             prop.prop = selectedBlock.prop;
         addedBlock = true;
@@ -190,10 +202,16 @@ function downloadMap()
             prop.height = block.height;
         if (block.width != 1)
             prop.width = block.width;
+        if (block.xOffset != 0)
+            prop.xOffset = block.xOffset;
+        if (block.yOffset != 0)
+            prop.yOffset = block.yOffset;
         if (block.isRepeat != false)
             prop.isRepeat = block.isRepeat;
         if (block.isSolid != true)
             prop.isSolid = block.isSolid;
+        if (block.isUnbreakable != false)
+            prop.isUnbreakable = block.isUnbreakable;
         if (block.prop != "")
             prop.prop = block.prop;
         

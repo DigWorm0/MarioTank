@@ -82,6 +82,8 @@ class Block {
         this.height = 1;
         this.xVel = 0;
         this.yVel = 0;
+        this.xOffset = 0;
+        this.yOffset = 0;
         this.isSolid = true;
         this.isRepeat = false;
         this.isGravity = false;
