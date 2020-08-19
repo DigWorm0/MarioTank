@@ -46,6 +46,22 @@ module.exports.load = function(io, worlds, blockConstructor)
             entity.isPhysics = true;
             entity.isGravity = true;
         },
+        "entity/goomba-2":(entity) => {
+            _initAnim(entity, {
+                "default":2,
+                "squash":1,
+                "flip":1
+            });
+            entity.isPhysics = true;
+            entity.isGravity = true;
+        },
+        "entity/koopa-1":(entity) => {
+            _initAnim(entity, {
+                "default":2
+            });
+            entity.isPhysics = true;
+            entity.isGravity = true;
+        },
         "tank/bullet-1":(entity) => {
             setTimeout(() => {
                 io.emit("removeBlock", entity.world, entity.id)

@@ -35,7 +35,7 @@ class World {
     download() {
         var world = this;
         const promise = new Promise(function (resolve, reject) {
-            var url = "https://supermario.wtf/worldData/" + world.id + ".json";
+            var url = "http://localhost:8080/worldData/" + world.id + ".json"; //https://supermario.wtf/worldData/
             request({
                 url: url,
                 json: true
