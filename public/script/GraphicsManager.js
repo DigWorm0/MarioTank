@@ -36,6 +36,23 @@ function drawRect(x, y, width, height, color)
 }
 
 /**
+ * Draws a rectangle outline
+ * @param {number} x
+ * @param {number} y 
+ * @param {number} width 
+ * @param {number} height 
+ * @param {string} color 
+ */
+function drawRectOutline(x, y, width, height, color)
+{
+    ctx.beginPath();
+    ctx.lineWidth = "3";
+    ctx.strokeStyle = color;
+    ctx.rect(x*CELL_SIZE - cameraX, y*CELL_SIZE - cameraY, width*CELL_SIZE, height*CELL_SIZE);
+    ctx.stroke();
+}
+
+/**
  * Draws a line from (x1, y1) to (x2, y2)
  * @param {number} x1 
  * @param {number} y1 
@@ -165,8 +182,9 @@ function drawPlayers(players)
         ctx.textAlign = 'center';
         if (id == player.id)
         {
-            drawBlock(player, Math.round(player.x*CELL_SIZE)/CELL_SIZE, player.y, false);
+            drawBlock(player, Math.round(player.x*CELL_SIZE)/CELL_SIZE + player.xOffset, player.y + player.yOffset, false);
             drawText(player.name, ((player.x - 1) + (player.width / 2)) * CELL_SIZE, (player.y - 1.2)*CELL_SIZE, "7.5px PressStart2P");
+            //drawRectOutline(player.x - 1, player.y - 1, player.width, player.height, "red"); // Shows Hitbox
         }
         else
         {

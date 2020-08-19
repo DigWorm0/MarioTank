@@ -86,6 +86,10 @@ function _getTimestamp() {
  */
 function resetWorld()
 {
+    if (world.id != world.displayName)
+    {
+        socket.emit("getWorld", world.displayName);
+    }
     stallMsg("WORLD " + world.displayName);
     if (countdownInterval != -1)
         clearInterval(countdownInterval);

@@ -1,6 +1,6 @@
 class PowerUp
 {
-    constructor(type, width, height, fire, props={})
+    constructor(type, width, height, xOffset, yOffset, fire, props={})
     {
         this.type       = type;
         this.width      = width;
@@ -8,6 +8,8 @@ class PowerUp
         this.fire       = fire;
         this.props      = props;
         this.speed      = DEFAULT_SPEED;
+        this.xOffset    = xOffset;
+        this.yOffset    = yOffset;
         
         for (var property in props) {
             this[property] = props[property];
@@ -16,9 +18,9 @@ class PowerUp
 }
 
 var powerups = {
-    "shroom":new PowerUp("shroom", 0.9, 2, () => {}),
-    "fire":new PowerUp("fire", 0.9, 2, () => {}),
-    "tank":new PowerUp("tank", 3.9, 2, () => {
+    "shroom":new PowerUp("shroom", 0.9, 2, 0, 0, () => {}),
+    "fire":new PowerUp("fire", 0.9, 2, 0, 0, () => {}),
+    "tank":new PowerUp("tank", 3.3125, 1.7, -0.25, -0.3125, () => {
         var offset = player.flip ? 0 : player.width;
         socket.emit("addBlock", world.id, "tank/bullet-1", player.x + offset, player.y + player.height * 0.21875, {
             "isSolid":false,
@@ -28,5 +30,16 @@ var powerups = {
             "direction":player.flip
         })
     }, { "speed":0.005 }),
-    "sanic":new PowerUp("sanic", 1.9, 2, () => {}, { "speed":0.02 })
+    "sanic":new PowerUp("sanic", 1.9, 1.9, 0, 0, () => {}, { "speed":0.02 })
 };
+
+function plrPowerup(power)
+{
+    player.power     = power.type;
+    player.y        += player.height-power.height;
+    player.height    = power.height;
+    player.width     = power.width;
+    player.moveSpeed = power.speed;
+    player.xOffset   = power.xOffset;
+    player.yOffset   = power.yOffset;
+}

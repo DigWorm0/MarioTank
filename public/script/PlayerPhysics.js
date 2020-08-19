@@ -150,10 +150,10 @@ function playerUpdate()
                     socket.emit('updateBlock', world.id, block.id, {"hop":true});
                     block.hop = true;
                     var c = block.id;
-                    setTimeout(() => {
-                        socket.emit('updateBlock', world.id, c, {"hop":false});
-                        world.blocks[c].hop = false;
-                    }, 100);
+                    setTimeout((id) => {
+                        socket.emit('updateBlock', world.id, id, {"hop":false});
+                        world.blocks[id].hop = false;
+                    }, 100, c);
                 }
                 else
                 {
@@ -185,11 +185,11 @@ function playerUpdate()
                 socket.emit('updateBlock', world.id, block.id, {"hop":true, "state":"used"});
                 block.state = "used";
                 block.hop = true;
-                var d = block.id;
-                setTimeout(() => {
-                    socket.emit('updateBlock', world.id, d, {"hop":false})
-                    world.blocks[d].hop = false;
-                }, 100);
+                let d = block.id;
+                setTimeout((id) => {
+                    socket.emit('updateBlock', world.id, id, {"hop":false})
+                    world.blocks[id].hop = false;
+                }, 100, d);
             }
         }
 
@@ -305,6 +305,8 @@ class Player {
         this.fired      = false;
         this.hop        = false;
         this.world      = "1-1";
+        this.xOffset    = 0;
+        this.yOffset    = 0;
 
         /**
         * Runs if there is a collision between player and collider
@@ -328,12 +330,7 @@ class Player {
                 var power = collider.type.substring(6, collider.type.length-2);
                 if (power in powerups)
                 {
-                    player.power = power;
-                    power = powerups[power];
-                    player.y += player.height-power.height;
-                    player.height = power.height;
-                    player.width = power.width;
-                    player.moveSpeed = power.speed;
+                    plrPowerup(powerups[power])
                     socket.emit('removeBlock', world.id, collider.id);
                     return false;
                 }
