@@ -296,9 +296,12 @@ function playerUpdate()
     }
 
     // Animation State
-    player.state = (Math.abs(player.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
-    player.state = player.jumped ? "jump" : player.state;
-    player.flip = Math.abs(player.xVel) > 0.01 ? player.xVel < 0 : player.flip;
+    if (!isAnimating)
+    {
+        player.state = (Math.abs(player.xVel * CELL_SIZE) > 0.2) ? "walk" : "default";
+        player.state = player.jumped ? "jump" : player.state;
+        player.flip = Math.abs(player.xVel) > 0.01 ? player.xVel < 0 : player.flip;
+    }
 }
 
 /**
@@ -371,17 +374,19 @@ class Player {
                     return false;
                 }
             }
-            /* End Flag
+            // End Flag
             else if (collider.type == "flag/pole-1" && collider.prop != "")
             {
-                socket.emit("getWorld", collider.prop); // TODO flag pole animation
-                stallMsg("WORLD " + collider.prop);
-                if (countdownInterval != -1)
-                    clearInterval(countdownInterval);
-                countdownInterval = setTimeout(() => {
-                    exitStall();
-                }, 2000);
-            }*/
+                startAnimation("flag", () => {
+                    socket.emit("getWorld", collider.prop); // TODO flag pole animation
+                    stallMsg("WORLD " + collider.prop);
+                    if (countdownInterval != -1)
+                        clearInterval(countdownInterval);
+                    countdownInterval = setTimeout(() => {
+                        exitStall();
+                    }, 2000);
+                })
+            }
             return collider.isSolid;
        }
 

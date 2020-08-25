@@ -11,6 +11,24 @@ var plrAnimations = {
             player.y+=0.04;
         }
         return currentFrame >= 60;
+    },
+    "flag":() => {
+        if (currentFrame >= 20 && player.y <= 12)
+        {
+            player.y+=0.04;
+            player.state = "climb";
+        }
+        if (currentFrame == 200 && player.y >= 12)
+        {
+            player.x = 200;
+            player.y = 13;
+            player.state = "walk";
+        }
+        if (currentFrame > 200 && player.x <= 205 && player.y >= 12)
+        {
+            player.x+=0.1;
+        }
+        return player.x >= 205;
     }
 };
 

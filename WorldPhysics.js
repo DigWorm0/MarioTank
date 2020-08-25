@@ -77,6 +77,13 @@ module.exports.load = function(io, worlds, blockConstructor)
         },
         "tank/bullet-1":(entity) => {
             setTimeout(() => {
+                if (!(entity.id in this.worlds[entity.world].blocks))
+                    return;
+
+                var explosion = new this.Block("explosion/explosion-1", entity.x - 2, entity.y - 2, entity.world, {isSolid:false, width:4, height:4, isRepeat:false});
+                worlds[entity.world].blocks[explosion.id] = explosion;
+                this.io.emit("addBlock", entity.world, explosion);
+
                 io.emit("removeBlock", entity.world, entity.id)
                 delete this.worlds[entity.world].blocks[entity.id];
             }, 1000);
@@ -117,6 +124,15 @@ module.exports.load = function(io, worlds, blockConstructor)
                 delete this.worlds[w].blocks[d];
                 delete this.worlds[w].blocks[e];
             }, 2000);
+        },
+        "explosion/explosion-1":(entity) => {
+            _initAnim(entity, {
+                "default":9
+            }, 0.3);
+            setTimeout(() => {
+                io.emit("removeBlock", entity.world, entity.id)
+                delete this.worlds[entity.world].blocks[entity.id];
+            }, 300);
         }
     };
     module.exports.blockUpdates = {
@@ -153,13 +169,21 @@ module.exports.load = function(io, worlds, blockConstructor)
             {
                 if (collider.isUnbreakable)
                     return;
+                // Debris
                 var b = new this.Block('brick/debris-1',collider.x, collider.y, collider.world, {"isSolid":false});
                 this.worlds[collider.world].blocks[b.id] = b;
                 io.emit("addBlock", collider.world, b);
 
+                // Explosion
+                var explosion = new this.Block("explosion/explosion-1", entity.x - 2, entity.y - 2, entity.world, {isSolid:false, width:4, height:4, isRepeat:false});
+                worlds[entity.world].blocks[explosion.id] = explosion;
+                this.io.emit("addBlock", entity.world, explosion);
+
+                // Bullet
                 io.emit("removeBlock", entity.world, entity.id)
                 delete this.worlds[entity.world].blocks[entity.id];
 
+                // Collider
                 io.emit("removeBlock", collider.world, collider.id)
                 delete this.worlds[collider.world].blocks[collider.id];
             }
