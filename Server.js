@@ -35,7 +35,7 @@ class World {
     download() {
         var world = this;
         const promise = new Promise(function (resolve, reject) {
-            var url = "http://localhost:8080/worldData/" + world.id + ".json"; //https://supermario.wtf/worldData/
+            var url = "https://www.supermario.wtf/worldData/" + world.id + ".json"; //
             request({
                 url: url,
                 json: true
@@ -82,6 +82,8 @@ class Block {
         this.height = 1;
         this.xVel = 0;
         this.yVel = 0;
+        this.xOffset = 0;
+        this.yOffset = 0;
         this.isSolid = true;
         this.isRepeat = false;
         this.isGravity = false;

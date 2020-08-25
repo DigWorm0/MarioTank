@@ -30,8 +30,9 @@ function _loop()
  */
 function physicsLoop()
 {
+    runAnimations();
     applyPlayerVectors(player, world);
-    playerUpdate()
+    playerUpdate();
     if (player.y>18 || world.time<1) {
         player.die(true);
     }

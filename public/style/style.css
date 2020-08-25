@@ -10,6 +10,7 @@ html, body {
     margin:0;
     background-color: black;
     font-family: "PressStart2P";
+    image-rendering: optimizeSpeed;
 }
 
 canvas {
@@ -53,6 +54,21 @@ canvas {
 .startForm h1 {
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
+.startForm img {
+    min-width: 30%;
+    max-width:80%;
+}
+
+.submitButton {
+    min-width: 20% !important;
+    max-width:50% !important;
+    margin-top:10px;
+}
+
+.submitButton:hover{
+    background-color:grey;
+    cursor: pointer;
+}
 
 .bgImg {
     width: 100%;
@@ -92,11 +108,19 @@ canvas {
     }
 
 .bottom-link {
-    width:200px;
+    width:300px;
     position: absolute;
     bottom:20px;
     right:20px;
+}
+.bottom-link a {
     color:white;
     text-align: center;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+
+.share-link {
+    position: absolute;
+    bottom:20px;
+    left:20px;
 }

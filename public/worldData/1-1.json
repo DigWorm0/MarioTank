@@ -10,7 +10,8 @@
             "properties": {
                 "height": 2,
                 "width": 69,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -20,7 +21,8 @@
             "properties": {
                 "height": 2,
                 "width": 15,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -30,7 +32,8 @@
             "properties": {
                 "height": 2,
                 "width": 64,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -40,7 +43,8 @@
             "properties": {
                 "height": 2,
                 "width": 65,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -131,7 +135,8 @@
             "y": 12,
             "properties": {
                 "height": 2,
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -140,7 +145,8 @@
             "y": 11,
             "properties": {
                 "height": 2,
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -148,7 +154,8 @@
             "x": 39,
             "y": 13,
             "properties": {
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -165,7 +172,8 @@
             "y": 10,
             "properties": {
                 "height": 2,
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -173,7 +181,8 @@
             "x": 47,
             "y": 12,
             "properties": {
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -191,7 +200,8 @@
             "properties": {
                 "height": 2,
                 "width": 2,
-                "prop": "1-1-pipe"
+                "prop": "1-1-pipe",
+                "isUnbreakable": true
             }
         },
         {
@@ -199,7 +209,8 @@
             "x": 58,
             "y": 12,
             "properties": {
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -462,7 +473,8 @@
             "y": 13,
             "properties": {
                 "width": 4,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -471,7 +483,8 @@
             "y": 12,
             "properties": {
                 "width": 3,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -480,14 +493,17 @@
             "y": 11,
             "properties": {
                 "width": 2,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
             "type": "brick/block-1",
             "x": 138,
             "y": 10,
-            "properties": {}
+            "properties": {
+                "isUnbreakable": true
+            }
         },
         {
             "type": "brick/block-1",
@@ -495,7 +511,8 @@
             "y": 13,
             "properties": {
                 "width": 4,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -504,7 +521,8 @@
             "y": 12,
             "properties": {
                 "width": 3,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -513,14 +531,17 @@
             "y": 11,
             "properties": {
                 "width": 2,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
             "type": "brick/block-1",
             "x": 141,
             "y": 10,
-            "properties": {}
+            "properties": {
+                "isUnbreakable": true
+            }
         },
         {
             "type": "hill/big-1",
@@ -536,7 +557,8 @@
             "y": 13,
             "properties": {
                 "width": 5,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -545,7 +567,8 @@
             "y": 12,
             "properties": {
                 "width": 4,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -554,7 +577,8 @@
             "y": 11,
             "properties": {
                 "width": 3,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -563,7 +587,8 @@
             "y": 10,
             "properties": {
                 "width": 2,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -580,7 +605,8 @@
             "y": 13,
             "properties": {
                 "width": 4,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -589,7 +615,8 @@
             "y": 12,
             "properties": {
                 "width": 3,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -598,14 +625,17 @@
             "y": 11,
             "properties": {
                 "width": 2,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
             "type": "brick/block-1",
             "x": 156,
             "y": 10,
-            "properties": {}
+            "properties": {
+                "isUnbreakable": true
+            }
         },
         {
             "type": "hill/small-1",
@@ -621,7 +651,8 @@
             "y": 12,
             "properties": {
                 "height": 2,
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -670,7 +701,8 @@
             "y": 12,
             "properties": {
                 "height": 2,
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -679,7 +711,8 @@
             "y": 13,
             "properties": {
                 "width": 9,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -688,7 +721,8 @@
             "y": 12,
             "properties": {
                 "width": 8,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -697,7 +731,8 @@
             "y": 11,
             "properties": {
                 "width": 7,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -706,7 +741,8 @@
             "y": 10,
             "properties": {
                 "width": 6,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -715,7 +751,8 @@
             "y": 9,
             "properties": {
                 "width": 5,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -724,7 +761,8 @@
             "y": 8,
             "properties": {
                 "width": 4,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -733,7 +771,8 @@
             "y": 7,
             "properties": {
                 "width": 3,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -742,7 +781,8 @@
             "y": 6,
             "properties": {
                 "width": 2,
-                "isRepeat": true
+                "isRepeat": true,
+                "isUnbreakable": true
             }
         },
         {
@@ -757,7 +797,9 @@
             "type": "brick/block-1",
             "x": 199,
             "y": 13,
-            "properties": {}
+            "properties": {
+                "isUnbreakable": true
+            }
         },
         {
             "type": "flag/pole-1",
@@ -765,7 +807,8 @@
             "y": 4,
             "properties": {
                 "height": 9,
-                "isSolid": false
+                "isSolid": false,
+                "prop":"1-2"
             }
         },
         {
@@ -1073,7 +1116,8 @@
             "x": 47,
             "y": 13,
             "properties": {
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
             }
         },
         {
@@ -1081,7 +1125,16 @@
             "x": 58,
             "y": 13,
             "properties": {
-                "width": 2
+                "width": 2,
+                "isUnbreakable": true
+            }
+        },
+        {
+            "type": "entity/koopa-1",
+            "x": 108,
+            "y": 13,
+            "properties": {
+                "yOffset": -0.5
             }
         }
     ]

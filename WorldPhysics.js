@@ -37,11 +37,17 @@ module.exports.load = function(io, worlds, blockConstructor)
                 "used":1
             }, 0);
         },
+        "power/shroom-1":(entity) => {
+            entity.isPhysics = true;
+            entity.isGravity = true;
+            entity.isSolid   = true;
+        },
         "entity/goomba-1":(entity) => {
             _initAnim(entity, {
                 "default":2,
                 "squash":1,
-                "flip":1
+                "flip":1,
+                "bloody":1
             });
             entity.isPhysics = true;
             entity.isGravity = true;
@@ -56,6 +62,13 @@ module.exports.load = function(io, worlds, blockConstructor)
             entity.isGravity = true;
         },
         "entity/koopa-1":(entity) => {
+            _initAnim(entity, {
+                "default":2
+            });
+            entity.isPhysics = true;
+            entity.isGravity = true;
+        },
+        "entity/koopa-2":(entity) => {
             _initAnim(entity, {
                 "default":2
             });
@@ -111,8 +124,23 @@ module.exports.load = function(io, worlds, blockConstructor)
             entity.y -= 0.2;
             this.io.emit("updateBlock", entity.world, entity.id, {"y":entity.y});
         },
+        "power/shroom-1":(entity) => {
+            _bounceAround(entity, this.worlds[entity.world]);
+        },
         "entity/goomba-1":(entity) => {
             _bounceAround(entity, this.worlds[entity.world]);
+        },
+        "entity/goomba-2":(entity) => {
+            _bounceAround(entity, this.worlds[entity.world]);
+        },
+        "entity/koopa-1":(entity) => {
+            _bounceAround(entity, this.worlds[entity.world]);
+            entity.flip = entity.direction;
+        },
+        "entity/koopa-2":(entity) => {
+            _bounceAround(entity, this.worlds[entity.world]);
+            entity.flip = entity.direction;
+            this.io.emit("updateBlock", entity.world, entity.id, {flip:entity.flip});
         },
         "tank/bullet-1":(entity) => {
             if (entity.direction)
@@ -123,6 +151,8 @@ module.exports.load = function(io, worlds, blockConstructor)
             var collider = _findCollision(entity.x, entity.y, entity, this.worlds[entity.world], entity.width, entity.height);
             if (collider)
             {
+                if (collider.isUnbreakable)
+                    return;
                 var b = new this.Block('brick/debris-1',collider.x, collider.y, collider.world, {"isSolid":false});
                 this.worlds[collider.world].blocks[b.id] = b;
                 io.emit("addBlock", collider.world, b);

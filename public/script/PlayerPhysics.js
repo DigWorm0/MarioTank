@@ -1,3 +1,4 @@
+var enableGravity = true;
 
 /**
  * Applys controls, velocity, and gravity to player
@@ -12,48 +13,54 @@ function applyPlayerVectors(player, world)
     if (!(player.x) || !(player.y))
         return;
     UpdateControls();
-    if (Controls.up && player.onground && !player.jumping)
+    if (!isAnimating)
     {
-        player.jumped = true;
-        player.jumping = true;
-        player.onground = false;
-        player.yVel -= JUMP_FORCE;
+        if (Controls.up && player.onground && !player.jumping)
+        {
+            player.jumped = true;
+            player.jumping = true;
+            player.onground = false;
+            player.yVel -= JUMP_FORCE;
 
-        setTimeout(function() {
+            setTimeout(function() {
+                player.jumping = false;
+            }, 100);
+        }
+        if (!Controls.up && player.jumping)
+        {
             player.jumping = false;
-        }, 100);
-    }
-    if (!Controls.up && player.jumping)
-    {
-        player.jumping = false;
-    }
-    if (player.jumping)
-    {
-        player.yVel -= CONTINUOUS_JUMP_FORCE
-    }
-    
-    if (player.onground && Controls.sprint)
-        player.xVel += Controls.horizontal * (player.moveSpeed + 0.0075);
-    else if (player.onground)
-        player.xVel += Controls.horizontal * (player.moveSpeed + 0.0025);
-    else
-        player.xVel += Controls.horizontal * player.moveSpeed;
-    
-    if (!player.fired && Controls.fire && player.power in powerups)
-    {
-        player.fired = true;
-        setTimeout(() => {
-            player.fired = false;
-        }, 1000);
-        powerups[player.power].fire();
+        }
+        if (player.jumping)
+        {
+            player.yVel -= CONTINUOUS_JUMP_FORCE
+        }
+        
+        if (player.onground && Controls.sprint)
+            player.xVel += Controls.horizontal * (player.moveSpeed + 0.0075);
+        else if (player.onground)
+            player.xVel += Controls.horizontal * (player.moveSpeed + 0.0025);
+        else
+            player.xVel += Controls.horizontal * player.moveSpeed;
+        
+        if (!player.fired && Controls.fire && player.power in powerups)
+        {
+            player.fired = true;
+            setTimeout(() => {
+                player.fired = false;
+            }, 300);
+            powerups[player.power].fire();
+        }
     }
 
     // Physics
-    player.yVel += GRAVITY;
+    if (enableGravity)
+        player.yVel += GRAVITY;
     player.x += player.xVel;
-    _correctXMovement(player, world);
+    if (!isAnimating)
+        _correctXMovement(player, world);
     player.y += player.yVel;
-    _correctYMovement(player, world);
+    if (!isAnimating)
+        _correctYMovement(player, world);
     player.xVel *= X_MOTION_DAMPING;
     player.yVel *= Y_MOTION_DAMPING;
     socket.emit('updatePlayer', player)
@@ -143,7 +150,7 @@ function playerUpdate()
         if (block.type.includes("brick/float-") || block.type.includes("brick/wall-"))
         {
             var top = _boxCollider(player.x + 0.01, player.y - 0.01, player.width - 0.02, 0.01, block.x, block.y, block.width, block.height);
-            if (top && block.state != "used")
+            if (top && block.state != "used" && !(block.isUnbreakable))
             {
                 if (block.prop != "")
                 {
@@ -187,7 +194,7 @@ function playerUpdate()
         }
 
         // Question Blocks
-        if (block.type.includes("question/block-"))
+        if (block.type.substring(0,15) == "question/block-")
         {
             var top = _boxCollider(player.x + 0.01, player.y - 0.01, player.width - 0.02, 0.01, block.x, block.y, block.width, block.height);
             if (block.state != "used" && top)
@@ -217,42 +224,44 @@ function playerUpdate()
         }
 
         // Goomba
-        if (block.type == "entity/goomba-1")
+        if (block.type.substring(0, 14) == "entity/goomba-" || block.type.substring(0, 13) == "entity/koopa-")
         {
             var bottom = _boxCollider(player.x + 0.01, player.y + player.height + 0.01, player.width - 0.02, 0.01, block.x, block.y, block.width, block.height);
             var around = _boxCollider(player.x - 0.01, player.y - 0.01, player.width + 0.02, player.height + 0.01, block.x, block.y, block.width, block.height)
             
             if (bottom)
             {
-                if (block.type == "entity/goomba-1")
+                var b = block;
+            
+                block.isSolid = false;
+                block.state = player.power == "tank" ? "bloody" : "squash";
+                socket.emit('updateBlock', world.id, block.id, {
+                    "speed":0,
+                    "state":block.state,
+                    "isSolid":false,
+                    "y":block.y + 0.75,
+                    "isPhysics":false,
+                    "isGravity":false,
+                    "repeat":false,
+                    "height":(1/3)
+                });
+
+                if (block.state != "bloody")
                 {
-                    var b = block;
                     setTimeout(() => {
                         socket.emit('removeBlock', world.id, b.id);
                     }, 200);
-                
-                    block.isSolid = false;
-                    socket.emit('updateBlock', world.id, block.id, {
-                        "speed":0,
-                        "state":"squash",
-                        "isSolid":false,
-                        "y":block.y + 0.75,
-                        "isPhysics":false,
-                        "isGravity":false,
-                        "repeat":false,
-                        "height":(1/3)
-                    });
-    
-                    player.score += 100;
-    
-                    if (Controls.up) {
-                        player.yVel = -BOUNCE_FORCE * 3;
-                        player.jumped = true
-                    }
-                    else
-                        player.yVel = -BOUNCE_FORCE;
-                    player.y += player.yVel;
                 }
+
+                player.score += 100;
+
+                if (Controls.up) {
+                    player.yVel = 0;
+                    player.jumped = true
+                }
+                else
+                    player.yVel = -BOUNCE_FORCE;
+                player.y += player.yVel;
             }
             else if (around)
             {
@@ -261,17 +270,21 @@ function playerUpdate()
         }
 
         // Pipes
-        if (block.type == "pipe/up-1")
+        if (block.type.substring(0,8) == "pipe/up-")
         {
             var bottom = _boxCollider(player.x + 0.4, player.y + player.height + 0.01, player.width - 0.8, 0.01, block.x, block.y, block.width, block.height);
 
             if (bottom && Controls.down && block.prop != "" && block.prop != null && block.prop != undefined)
             {
-                socket.emit("getWorld", block.prop);
+                var p = block.prop;
+
+                startAnimation("downPipe", ()=>{
+                    socket.emit("getWorld", p);
+                });
             }
         }
         // Pipes
-        if (block.type == "pipe/left-1")
+        if (block.type.substring(0,10) == "pipe/left-")
         {
             var right = _boxCollider(player.x + player.width, player.y + 0.4, 0.01, player.height - 0.8, block.x, block.y, block.width, block.height);
 
@@ -339,17 +352,17 @@ class Player {
         */
        this.collision = function(player, collider)
        {
-           // Coin
-           if (collider.type.includes("coin/coin-") && collider.type != "coin/coin-anim-1")
-           {
+            // Coin
+            if (collider.type.includes("coin/coin-") && collider.type != "coin/coin-anim-1")
+            {
                 player.coins++;
                 delete world.blocks[collider.id];
                 socket.emit('removeBlock', world.id, collider.id);
                 return false;
-           }
-           // Power Up
-           else if (collider.type.substring(0, 6) == "power/")
-           {
+            }
+            // Power Up
+            else if (collider.type.substring(0, 6) == "power/")
+            {
                 var power = collider.type.substring(6, collider.type.length-2);
                 if (power in powerups)
                 {
@@ -357,8 +370,19 @@ class Player {
                     socket.emit('removeBlock', world.id, collider.id);
                     return false;
                 }
-           }
-           return collider.isSolid;
+            }
+            /* End Flag
+            else if (collider.type == "flag/pole-1" && collider.prop != "")
+            {
+                socket.emit("getWorld", collider.prop); // TODO flag pole animation
+                stallMsg("WORLD " + collider.prop);
+                if (countdownInterval != -1)
+                    clearInterval(countdownInterval);
+                countdownInterval = setTimeout(() => {
+                    exitStall();
+                }, 2000);
+            }*/
+            return collider.isSolid;
        }
 
         /**
